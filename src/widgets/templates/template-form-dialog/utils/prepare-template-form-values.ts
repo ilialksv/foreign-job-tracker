@@ -6,8 +6,8 @@ export const prepareTemplateFormValues = (params: {
   template: Template | null;
 }): TemplateFormValues => ({
   title: params.template?.title ?? "",
-  lang: params.template?.lang ?? "en",
   audience: params.template?.audience ?? "any",
   scenario: params.template?.scenario ?? "custom",
-  body: params.template?.body ?? "",
+  bodyEn: params.template?.bodies.en ?? "",
+  bodyRu: params.template?.bodies.ru ?? "",
 });

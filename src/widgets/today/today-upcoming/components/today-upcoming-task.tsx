@@ -39,6 +39,7 @@ export const TodayUpcomingTask = ({
     <TaskRow
       task={task}
       companyName={companyName}
+      emphasis="company"
       renderContent={renderContent}
     />
   );

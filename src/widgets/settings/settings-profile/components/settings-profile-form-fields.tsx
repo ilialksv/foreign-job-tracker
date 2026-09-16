@@ -11,83 +11,84 @@ const COUNTRY_OPTIONS = COUNTRIES.map((country) => ({
 export const SettingsProfileFormFields = withForm({
   defaultValues: {} as SettingsProfileFormValues,
   render: ({ form }) => (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
-          Подпись и ссылки
-        </span>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <form.AppField name="fullName">
-            {(field) => (
-              <field.InputField
-                label="Имя для подписи"
-                hint="Подставляется как {{myName}}"
-                autoComplete="off"
-              />
-            )}
-          </form.AppField>
-          <form.AppField name="linkedinUrl">
-            {(field) => (
-              <field.InputField label="LinkedIn" placeholder="https://" />
-            )}
-          </form.AppField>
-          <form.AppField name="portfolioUrl">
-            {(field) => (
-              <field.InputField
-                label="Портфолио"
-                hint="Подставляется как {{portfolioUrl}}"
-                placeholder="https://"
-              />
-            )}
-          </form.AppField>
-          <form.AppField name="cvUrl">
-            {(field) => (
-              <field.InputField
-                label="Ссылка на резюме"
-                placeholder="https://"
-              />
-            )}
-          </form.AppField>
-        </div>
+    <div className="flex flex-col gap-4">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <form.AppField name="fullName">
+          {(field) => (
+            <field.InputField
+              label="Имя для подписи"
+              hint="Подставляется как {{myName}}"
+              placeholder="Ilia Alekseev"
+              autoComplete="off"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="linkedinUrl">
+          {(field) => (
+            <field.InputField label="LinkedIn" placeholder="https://" />
+          )}
+        </form.AppField>
+        <form.AppField name="portfolioUrl">
+          {(field) => (
+            <field.InputField
+              label="Портфолио"
+              hint="Подставляется как {{portfolioUrl}}"
+              placeholder="https://"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="cvUrl">
+          {(field) => (
+            <field.InputField label="Ссылка на резюме" placeholder="https://" />
+          )}
+        </form.AppField>
       </div>
 
-      <div className="flex flex-col gap-3">
-        <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
-          Ритм работы
-        </span>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <form.AppField name="companiesPerWeek">
-            {(field) => (
-              <field.InputField label="Компаний в неделю" inputMode="numeric" />
-            )}
-          </form.AppField>
-          <form.AppField name="firstDays">
-            {(field) => (
-              <field.InputField label="Follow-up 1, дней" inputMode="numeric" />
-            )}
-          </form.AppField>
-          <form.AppField name="secondDays">
-            {(field) => (
-              <field.InputField label="Follow-up 2, дней" inputMode="numeric" />
-            )}
-          </form.AppField>
-          <form.AppField name="reviveWeeks">
-            {(field) => (
-              <field.InputField
-                label="Реанимация, недель"
-                inputMode="numeric"
-              />
-            )}
-          </form.AppField>
-          <form.AppField name="defaultCountryCode">
-            {(field) => (
-              <field.SelectField
-                label="Страна по умолчанию"
-                options={COUNTRY_OPTIONS}
-              />
-            )}
-          </form.AppField>
-        </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <form.AppField name="companiesPerWeek">
+          {(field) => (
+            <field.InputField
+              label="Компаний в неделю"
+              placeholder="10"
+              inputMode="numeric"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="firstDays">
+          {(field) => (
+            <field.InputField
+              label="Follow-up 1, дней"
+              placeholder="5"
+              inputMode="numeric"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="secondDays">
+          {(field) => (
+            <field.InputField
+              label="Follow-up 2, дней"
+              placeholder="6"
+              inputMode="numeric"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="reviveWeeks">
+          {(field) => (
+            <field.InputField
+              label="Реанимация, недель"
+              placeholder="9"
+              inputMode="numeric"
+            />
+          )}
+        </form.AppField>
+        <form.AppField name="defaultCountryCode">
+          {(field) => (
+            <field.SelectField
+              label="Страна по умолчанию"
+              options={COUNTRY_OPTIONS}
+            />
+          )}
+        </form.AppField>
       </div>
     </div>
   ),

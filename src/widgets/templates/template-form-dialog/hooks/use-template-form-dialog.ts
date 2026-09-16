@@ -32,10 +32,9 @@ export const useTemplateFormDialog = (params: {
     onSubmit: ({ value }) => {
       const payload = {
         title: value.title.trim(),
-        lang: value.lang,
         audience: value.audience,
         scenario: value.scenario,
-        body: value.body,
+        bodies: { en: value.bodyEn, ru: value.bodyRu },
       };
 
       if (editedTemplate) {

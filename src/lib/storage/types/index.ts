@@ -14,6 +14,10 @@ export type UpdateInput<T extends BaseEntity> = Partial<
   Omit<T, keyof BaseEntity>
 >;
 
+export type CollectionMigration<T extends BaseEntity> = (params: {
+  items: unknown[];
+}) => { items: T[]; changed: boolean };
+
 export type CollectionRepository<T extends BaseEntity> = {
   list: () => Promise<T[]>;
   getById: (params: { id: string }) => Promise<T | null>;

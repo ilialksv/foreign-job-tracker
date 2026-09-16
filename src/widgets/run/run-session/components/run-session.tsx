@@ -97,20 +97,20 @@ export const RunSession = ({
       />
 
       <Panel className="flex flex-col gap-5 px-5 py-5">
-        <header className="flex flex-col gap-2">
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <header className="flex flex-col gap-1.5">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             {company ? (
               <Link
                 to="/companies/$companyId"
                 params={{ companyId: company.id }}
-                className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase hover:text-ink"
+                className="font-display text-[21px] leading-7 font-semibold text-ink hover:text-accent"
               >
                 {company.name}
               </Link>
             ) : (
-              <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+              <h2 className="font-display text-[21px] leading-7 font-semibold text-ink">
                 Общая задача
-              </span>
+              </h2>
             )}
             <div className="flex items-center gap-3">
               <span
@@ -129,9 +129,9 @@ export const RunSession = ({
               ) : null}
             </div>
           </div>
-          <h2 className="font-display text-[20px] leading-7 font-semibold text-ink">
+          <h3 className="text-[15px] leading-6 font-medium text-ink-2">
             {currentTask.title}
-          </h2>
+          </h3>
           {currentTask.description ? (
             <p className="max-w-prose text-[14px] leading-relaxed text-ink-2">
               {currentTask.description}

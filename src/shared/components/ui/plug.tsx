@@ -13,7 +13,7 @@ export type PlugProps = {
 export const Plug = ({ title, description, action, className }: PlugProps) => (
   <div
     className={cn(
-      "flex flex-col items-start gap-2 rounded-(--radius-panel) border border-line bg-surface px-4 py-6 shadow-(--shadow-panel)",
+      "flex flex-col items-start gap-2 rounded-(--radius-panel) border border-line bg-surface px-4 py-6",
       className,
     )}
   >

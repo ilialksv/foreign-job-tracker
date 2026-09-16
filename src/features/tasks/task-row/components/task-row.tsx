@@ -10,8 +10,9 @@ export type TaskRowProps = {
   task: Task;
   companyName?: string;
   blocked?: boolean;
+  /** В списке по всем компаниям главное — компания, внутри компании — шаг. */
+  emphasis?: "task" | "company";
   actions?: ReactNode;
-  /** Обёртка вокруг содержимого строки: сюда передают ссылку на элемент. */
   renderContent?: (content: ReactNode) => ReactNode;
 };
 
@@ -31,31 +32,35 @@ export const TaskRow = ({
   task,
   companyName,
   blocked = false,
+  emphasis = "task",
   actions,
   renderContent,
 }: TaskRowProps) => {
   const tone = getTone({ task, blocked });
   const isClosed = task.status === "done" || task.status === "skipped";
+  const showCompanyFirst = emphasis === "company" && Boolean(companyName);
+  const primaryText = showCompanyFirst ? companyName : task.title;
+  const secondaryText = showCompanyFirst ? task.title : companyName;
 
   const content = (
     <div className="flex min-w-0 items-start gap-2.5">
       <StatusDot tone={tone} className="mt-2" />
       <div className="flex min-w-0 flex-col gap-0.5">
         <span
-          className={cn("text-[14px] leading-5 font-medium", {
+          className={cn("truncate text-[14px] leading-5 font-medium", {
             "text-ink": !isClosed,
             "text-muted": isClosed,
             "line-through decoration-line-2": task.status === "skipped",
           })}
         >
-          {task.title}
+          {primaryText}
         </span>
-        {companyName ? (
+        {secondaryText ? (
           <span className="truncate text-[12.5px] text-muted">
-            {companyName}
+            {secondaryText}
           </span>
         ) : null}
-        {task.description ? (
+        {!showCompanyFirst && task.description ? (
           <p className="line-clamp-2 max-w-prose text-[12.5px] leading-relaxed text-muted">
             {task.description}
           </p>

@@ -61,7 +61,7 @@ export const CompaniesFilters = ({
       className="w-auto min-w-36"
     />
     {hasActiveFilters ? (
-      <Button variant="ghost" size="sm" onClick={onReset}>
+      <Button variant="ghost" onClick={onReset}>
         Сбросить
       </Button>
     ) : null}

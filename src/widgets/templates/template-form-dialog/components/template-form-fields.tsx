@@ -2,18 +2,11 @@ import { withForm } from "@/lib/tanstack-form";
 import {
   TEMPLATE_AUDIENCE_LABELS,
   TEMPLATE_AUDIENCE_ORDER,
-  TEMPLATE_LANG_LABELS,
-  TEMPLATE_LANG_ORDER,
   TEMPLATE_SCENARIO_LABELS,
   TEMPLATE_SCENARIO_ORDER,
 } from "@/shared/constants/templates";
 
 import type { TemplateFormValues } from "../schemas/template-form-schema";
-
-const LANG_OPTIONS = TEMPLATE_LANG_ORDER.map((lang) => ({
-  value: lang,
-  label: TEMPLATE_LANG_LABELS[lang],
-}));
 
 const AUDIENCE_OPTIONS = TEMPLATE_AUDIENCE_ORDER.map((audience) => ({
   value: audience,
@@ -30,13 +23,14 @@ export const TemplateFormFields = withForm({
   render: ({ form }) => (
     <div className="flex flex-col gap-3">
       <form.AppField name="title">
-        {(field) => <field.InputField label="Название" autoComplete="off" />}
+        {(field) => <field.InputField
+            label="Название"
+            placeholder="Коннект инженеру"
+            autoComplete="off"
+          />}
       </form.AppField>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        <form.AppField name="lang">
-          {(field) => <field.SelectField label="Язык" options={LANG_OPTIONS} />}
-        </form.AppField>
+      <div className="grid gap-3 sm:grid-cols-2">
         <form.AppField name="audience">
           {(field) => (
             <field.SelectField label="Кому" options={AUDIENCE_OPTIONS} />
@@ -49,8 +43,19 @@ export const TemplateFormFields = withForm({
         </form.AppField>
       </div>
 
-      <form.AppField name="body">
-        {(field) => <field.TextareaField label="Текст" rows={10} />}
+      <form.AppField name="bodyEn">
+        {(field) => <field.TextareaField
+            label="Текст · English"
+            placeholder="Hi {{contactName}}, I applied for {{vacancyTitle}} at {{company}}..."
+            rows={8}
+          />}
+      </form.AppField>
+      <form.AppField name="bodyRu">
+        {(field) => <field.TextareaField
+            label="Текст · Русский"
+            placeholder="Привет, {{contactName}}! Откликнулся на {{vacancyTitle}} в {{company}}..."
+            rows={8}
+          />}
       </form.AppField>
     </div>
   ),

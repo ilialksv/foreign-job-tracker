@@ -109,7 +109,12 @@ export const FLOW_STEPS: StepDefinition[] = [
         type: "url",
         placeholder: "https://www.linkedin.com/in/...",
       },
-      { key: "hiringName", label: "Имя нанимающего", type: "text" },
+      {
+        key: "hiringName",
+        label: "Имя нанимающего",
+        type: "text",
+        placeholder: "Как обращаться в записке",
+      },
       {
         key: "hasRussianSpeakers",
         label: "В команде есть русскоязычные",
@@ -128,8 +133,18 @@ export const FLOW_STEPS: StepDefinition[] = [
     creation: "initial",
     dependsOn: ["recon"],
     fields: [
-      { key: "vacancyUrl", label: "Ссылка на вакансию", type: "url" },
-      { key: "vacancyTitle", label: "Название вакансии", type: "text" },
+      {
+        key: "vacancyUrl",
+        label: "Ссылка на вакансию",
+        type: "url",
+        placeholder: "https://",
+      },
+      {
+        key: "vacancyTitle",
+        label: "Название вакансии",
+        type: "text",
+        placeholder: "Senior Frontend Engineer",
+      },
       {
         key: "channel",
         label: "Через что откликнулся",
@@ -157,8 +172,18 @@ export const FLOW_STEPS: StepDefinition[] = [
     dependsOn: ["recon"],
     templateScenario: "connect_note",
     fields: [
-      { key: "profileUrl", label: "Профиль инженера", type: "url" },
-      { key: "noteText", label: "Текст записки", type: "textarea" },
+      {
+        key: "profileUrl",
+        label: "Профиль инженера",
+        type: "url",
+        placeholder: "https://www.linkedin.com/in/...",
+      },
+      {
+        key: "noteText",
+        label: "Текст записки",
+        type: "textarea",
+        placeholder: "120–180 символов с просьбой про реферал",
+      },
     ],
     options: [
       {
@@ -187,8 +212,18 @@ export const FLOW_STEPS: StepDefinition[] = [
     dependsOn: ["recon"],
     templateScenario: "connect_note",
     fields: [
-      { key: "profileUrl", label: "Профиль нанимающего", type: "url" },
-      { key: "noteText", label: "Текст записки", type: "textarea" },
+      {
+        key: "profileUrl",
+        label: "Профиль нанимающего",
+        type: "url",
+        placeholder: "https://www.linkedin.com/in/...",
+      },
+      {
+        key: "noteText",
+        label: "Текст записки",
+        type: "textarea",
+        placeholder: "120–180 символов: отклик и просьба про 15 минут",
+      },
     ],
     options: [
       {
@@ -212,7 +247,14 @@ export const FLOW_STEPS: StepDefinition[] = [
     creation: "on_demand",
     dependsOn: [],
     templateScenario: "follow_up_1",
-    fields: [{ key: "messageText", label: "Что отправил", type: "textarea" }],
+    fields: [
+      {
+        key: "messageText",
+        label: "Что отправил",
+        type: "textarea",
+        placeholder: "Короткий follow-up без нового содержания",
+      },
+    ],
     options: [
       {
         value: "replied",
@@ -245,7 +287,14 @@ export const FLOW_STEPS: StepDefinition[] = [
     creation: "on_demand",
     dependsOn: [],
     templateScenario: "full_message",
-    fields: [{ key: "messageText", label: "Что отправил", type: "textarea" }],
+    fields: [
+      {
+        key: "messageText",
+        label: "Что отправил",
+        type: "textarea",
+        placeholder: "Развёрнутое сообщение после принятого коннекта",
+      },
+    ],
     options: [
       {
         value: "sent",
@@ -264,7 +313,14 @@ export const FLOW_STEPS: StepDefinition[] = [
     creation: "on_demand",
     dependsOn: [],
     templateScenario: "follow_up_2",
-    fields: [{ key: "messageText", label: "Что отправил", type: "textarea" }],
+    fields: [
+      {
+        key: "messageText",
+        label: "Что отправил",
+        type: "textarea",
+        placeholder: "Последний follow-up: контакты и вежливое закрытие",
+      },
+    ],
     options: [
       {
         value: "replied",
@@ -293,8 +349,18 @@ export const FLOW_STEPS: StepDefinition[] = [
     dependsOn: [],
     templateScenario: "proof_of_work",
     fields: [
-      { key: "linkUrl", label: "Ссылка на разбор", type: "url" },
-      { key: "findings", label: "Находки", type: "textarea" },
+      {
+        key: "linkUrl",
+        label: "Ссылка на разбор",
+        type: "url",
+        placeholder: "https://",
+      },
+      {
+        key: "findings",
+        label: "Находки",
+        type: "textarea",
+        placeholder: "3–5 пунктов с цифрами: LCP, размер бандла, axe",
+      },
     ],
     options: [
       {
@@ -357,7 +423,14 @@ export const FLOW_STEPS: StepDefinition[] = [
     creation: "on_demand",
     dependsOn: [],
     templateScenario: "thank_you",
-    fields: [{ key: "messageText", label: "Что отправил", type: "textarea" }],
+    fields: [
+      {
+        key: "messageText",
+        label: "Что отправил",
+        type: "textarea",
+        placeholder: "Спасибо, одна мысль из разговора, подтверждение интереса",
+      },
+    ],
     options: [
       {
         value: "sent",

@@ -2,6 +2,7 @@ import { ExternalLink, Trash2 } from "lucide-react";
 
 import { Button } from "@/shared/components/ui/button";
 import { StatusDot } from "@/shared/components/ui/status-dot";
+import { buttonVariants } from "@/shared/constants/button-variants";
 import {
   VACANCY_SOURCE_LABELS,
   VACANCY_STATUS_LABELS,
@@ -21,7 +22,7 @@ export const VacancyRow = ({ vacancy, onRemove }: VacancyRowProps) => {
   };
 
   return (
-    <div className="group flex items-start justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
+    <div className="flex items-start justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
       <div className="flex min-w-0 items-start gap-2.5">
         <StatusDot
           tone={VACANCY_STATUS_TONES[vacancy.status]}
@@ -47,18 +48,17 @@ export const VacancyRow = ({ vacancy, onRemove }: VacancyRowProps) => {
             target="_blank"
             rel="noreferrer"
             aria-label="Открыть вакансию"
-            className="inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-ink"
+            className={buttonVariants({ variant: "ghost", size: "icon-sm" })}
           >
             <ExternalLink className="size-3.5" />
           </a>
         ) : null}
         <Button
-          variant="ghost"
+          variant="danger-ghost"
           size="icon-sm"
           onClick={handleRemoveClick}
           icon={<Trash2 />}
           aria-label="Удалить вакансию"
-          className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         />
       </div>
     </div>

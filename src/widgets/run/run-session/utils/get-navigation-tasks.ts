@@ -1,15 +1,21 @@
 import { isTaskBlocked, isTaskOpen } from "@/lib/pipeline";
-import type { Task } from "@/shared/types/entities";
+import type { Company, Task } from "@/shared/types/entities";
 
 export type RunSessionMode = "active" | "completed" | "blocked";
 
 export type NavigationTask = {
   task: Task;
+  /** Главная подпись чипа: в общем режиме — компания, внутри компании — шаг. */
+  label: string;
+  /** Уточнение под главной подписью. Пусто, когда уточнять нечего. */
+  caption: string;
   mode: RunSessionMode;
   isSelectable: boolean;
   /** Названия незакрытых шагов, из-за которых этот недоступен. */
   blockedBy: string[];
 };
+
+const GLOBAL_TASK_LABEL = "Общая задача";
 
 export const getTaskMode = (params: {
   task: Task;
@@ -35,18 +41,36 @@ export const getBlockingTaskTitles = (params: { task: Task; tasks: Task[] }) =>
     return [...titles, dependency.title];
   }, []);
 
+const getCompanyName = (params: { task: Task; companies: Company[] }) => {
+  if (!params.task.companyId) {
+    return GLOBAL_TASK_LABEL;
+  }
+
+  const company = params.companies.find(
+    (item) => item.id === params.task.companyId,
+  );
+
+  return company?.name ?? GLOBAL_TASK_LABEL;
+};
+
 /**
  * Лента шагов для навигации. По компании — все её шаги по порядку,
  * в общем режиме — только то, что можно делать прямо сейчас.
+ *
+ * Подписи различаются по режиму: в общем списке шаги разных компаний
+ * называются одинаково, поэтому первой строкой идёт компания.
  */
 export const getNavigationTasks = (params: {
   tasks: Task[];
   actionableTasks: Task[];
+  companies: Company[];
   companyId?: string;
 }): NavigationTask[] => {
   if (!params.companyId) {
     return params.actionableTasks.map((task) => ({
       task,
+      label: getCompanyName({ task, companies: params.companies }),
+      caption: task.title,
       mode: "active",
       isSelectable: true,
       blockedBy: [],
@@ -67,6 +91,8 @@ export const getNavigationTasks = (params: {
 
       return {
         task,
+        label: task.title,
+        caption: "",
         mode,
         isSelectable: mode !== "blocked",
         blockedBy:

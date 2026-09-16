@@ -1,19 +1,36 @@
 import type { BaseEntity } from "@/shared/types/entities";
 import { nowIso } from "@/shared/utils/dates";
+
 import { generateId } from "@/shared/utils/generate-id";
 
 import { localStorageDriver } from "../drivers/local-storage-driver";
-import type { CollectionRepository, CreateInput, UpdateInput } from "../types";
+import type {
+  CollectionMigration,
+  CollectionRepository,
+  CreateInput,
+  UpdateInput,
+} from "../types";
 
 export const createCollectionRepository = <T extends BaseEntity>(params: {
   key: string;
   createSeed?: () => CreateInput<T>[];
+  migrate?: CollectionMigration<T>;
 }): CollectionRepository<T> => {
   const readAll = (): T[] => {
     const stored = localStorageDriver.read<T[]>({ key: params.key });
 
     if (stored !== null) {
-      return stored;
+      if (!params.migrate) {
+        return stored;
+      }
+
+      const migrated = params.migrate({ items: stored });
+
+      if (migrated.changed) {
+        localStorageDriver.write({ key: params.key, value: migrated.items });
+      }
+
+      return migrated.items;
     }
 
     if (!params.createSeed) {

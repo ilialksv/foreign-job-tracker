@@ -2,11 +2,11 @@ import type { ComponentProps } from "react";
 
 import { cn } from "@/shared/utils/cn";
 
-/** Приподнятая поверхность. На экране такая должна быть одна. */
+/** Поверхность содержимого. Визуально совпадает с Card: рамка, без тени. */
 export const Panel = ({ className, ...props }: ComponentProps<"div">) => (
   <div
     className={cn(
-      "rounded-(--radius-panel) border border-line bg-raised shadow-(--shadow-raised)",
+      "rounded-(--radius-panel) border border-line bg-surface",
       className,
     )}
     {...props}

@@ -4,7 +4,7 @@ import { SettingsProfile } from "@/widgets/settings/settings-profile/components/
 
 export const SettingsPage = () => (
   <div className="flex flex-col gap-8">
-    <PageHeader eyebrow="Конфигурация" title="Настройки" />
+    <PageHeader title="Настройки" />
     <SettingsProfile />
     <SettingsData />
   </div>

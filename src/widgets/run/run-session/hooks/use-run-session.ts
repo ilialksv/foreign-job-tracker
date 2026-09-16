@@ -64,9 +64,10 @@ export const useRunSession = (params: {
       getNavigationTasks({
         tasks,
         actionableTasks,
+        companies,
         companyId: params.companyId,
       }),
-    [actionableTasks, params.companyId, tasks],
+    [actionableTasks, companies, params.companyId, tasks],
   );
 
   const selectableItems = useMemo(
@@ -196,21 +197,25 @@ export const useRunSession = (params: {
     const templates = templatesQuery.data ?? [];
     const matching =
       templates.find(
-        (template) =>
-          template.scenario === step.templateScenario &&
-          template.lang === language,
-      ) ??
-      templates.find(
         (template) => template.scenario === step.templateScenario,
-      ) ??
-      null;
+      ) ?? null;
 
     if (!matching) {
       return null;
     }
 
+    const fallbackLang = language === "ru" ? "en" : "ru";
+    const body =
+      matching.bodies[language].length > 0
+        ? matching.bodies[language]
+        : matching.bodies[fallbackLang];
+
+    if (body.length === 0) {
+      return null;
+    }
+
     return fillTemplate({
-      body: matching.body,
+      body,
       variables: getTemplateVariables({
         company,
         companyTasks: tasks.filter((item) => item.companyId === company.id),

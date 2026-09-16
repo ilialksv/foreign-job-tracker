@@ -6,6 +6,7 @@ import {
   isValid,
   parseISO,
   startOfDay,
+  startOfWeek,
 } from "date-fns";
 
 export const nowIso = () => new Date().toISOString();
@@ -102,4 +103,19 @@ export const fromDateInputValue = (value: string) => {
   const parsed = parseISO(value);
 
   return isValid(parsed) ? startOfDay(parsed).toISOString() : null;
+};
+
+/** Неделя считается с понедельника: так же, как человек считает свой план. */
+export const isInCurrentWeek = (value: string | null) => {
+  if (!value) {
+    return false;
+  }
+
+  const parsed = parseISO(value);
+
+  if (!isValid(parsed)) {
+    return false;
+  }
+
+  return parsed >= startOfWeek(new Date(), { weekStartsOn: 1 });
 };

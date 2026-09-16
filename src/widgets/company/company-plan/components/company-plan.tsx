@@ -35,7 +35,6 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
       <Section
         title="Этапы и задачи"
         meta={openTasksCount > 0 ? `${openTasksCount} открыто` : undefined}
-        description="Клик по строке открывает шаг."
         contentClassName="pb-1.5"
         divided
         actions={

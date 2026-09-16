@@ -6,29 +6,30 @@ import { useGetCompanies } from "@/actions/companies/hooks/use-get-companies";
 import { useGetSettings } from "@/actions/settings/hooks/use-get-settings";
 import { useGetTemplates } from "@/actions/templates/hooks/use-get-templates";
 import { useRemoveTemplate } from "@/actions/templates/hooks/use-remove-template";
-import type { Template } from "@/shared/types/entities";
+import type { Template, TemplateLang } from "@/shared/types/entities";
 import { copyText } from "@/shared/utils/copy-text";
 import { fillTemplate } from "@/shared/utils/fill-template";
 
 import { buildPreviewVariables } from "../utils/build-preview-variables";
 
 type TemplatesFiltersState = {
-  lang: string;
   audience: string;
   scenario: string;
   companyId: string;
 };
 
 const INITIAL_FILTERS: TemplatesFiltersState = {
-  lang: "",
   audience: "",
   scenario: "",
   companyId: "",
 };
 
+const DEFAULT_LANG: TemplateLang = "en";
+
 export const useTemplatesList = () => {
   const [filters, setFilters] =
     useState<TemplatesFiltersState>(INITIAL_FILTERS);
+  const [langById, setLangById] = useState<Record<string, TemplateLang>>({});
   const [editedTemplate, setEditedTemplate] = useState<Template | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
@@ -49,9 +50,6 @@ export const useTemplatesList = () => {
     () =>
       (templatesQuery.data ?? [])
         .filter((template) =>
-          filters.lang.length === 0 ? true : template.lang === filters.lang,
-        )
-        .filter((template) =>
           filters.audience.length === 0
             ? true
             : template.audience === filters.audience,
@@ -64,16 +62,39 @@ export const useTemplatesList = () => {
     [filters, templatesQuery.data],
   );
 
+  const getLang = useCallback(
+    (template: Template): TemplateLang => {
+      const selected = langById[template.id];
+
+      if (selected && template.bodies[selected].length > 0) {
+        return selected;
+      }
+
+      return template.bodies[DEFAULT_LANG].length > 0 ? DEFAULT_LANG : "ru";
+    },
+    [langById],
+  );
+
   const getPreview = useCallback(
     (template: Template) =>
       fillTemplate({
-        body: template.body,
+        body: template.bodies[getLang(template)],
         variables: buildPreviewVariables({
           company: selectedCompany,
           settings: settingsQuery.data,
         }),
       }),
-    [selectedCompany, settingsQuery.data],
+    [getLang, selectedCompany, settingsQuery.data],
+  );
+
+  const handleLangChange = useCallback(
+    (langParams: { id: string; lang: TemplateLang }) => {
+      setLangById((previous) => ({
+        ...previous,
+        [langParams.id]: langParams.lang,
+      }));
+    },
+    [],
   );
 
   const handleFilterChange = useCallback(
@@ -126,12 +147,14 @@ export const useTemplatesList = () => {
     companies: companiesQuery.data ?? [],
     editedTemplate,
     filters,
+    getLang,
     getPreview,
     handleCopy,
     handleCreateClick,
     handleEdit,
     handleFilterChange,
     handleFormClose,
+    handleLangChange,
     handleRemove,
     isFormOpen,
     isLoading: templatesQuery.isLoading,

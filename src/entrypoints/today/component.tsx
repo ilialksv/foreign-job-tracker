@@ -11,7 +11,6 @@ import { TodayUpcoming } from "@/widgets/today/today-upcoming/components/today-u
 export const TodayPage = () => (
   <div className="flex flex-col gap-8">
     <PageHeader
-      eyebrow="Сессия дня"
       title="Сегодня"
       description="Одно действие за раз. Что дальше — решает воронка."
       actions={

@@ -9,19 +9,12 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import {
   TEMPLATE_AUDIENCE_LABELS,
   TEMPLATE_AUDIENCE_ORDER,
-  TEMPLATE_LANG_LABELS,
-  TEMPLATE_LANG_ORDER,
   TEMPLATE_SCENARIO_LABELS,
   TEMPLATE_SCENARIO_ORDER,
 } from "@/shared/constants/templates";
 import { TemplateFormDialog } from "@/widgets/templates/template-form-dialog/components/template-form-dialog";
 
 import { useTemplatesList } from "../hooks/use-templates-list";
-
-const LANG_OPTIONS = TEMPLATE_LANG_ORDER.map((lang) => ({
-  value: lang,
-  label: TEMPLATE_LANG_LABELS[lang],
-}));
 
 const AUDIENCE_OPTIONS = TEMPLATE_AUDIENCE_ORDER.map((audience) => ({
   value: audience,
@@ -38,12 +31,14 @@ export const TemplatesList = () => {
     companies,
     editedTemplate,
     filters,
+    getLang,
     getPreview,
     handleCopy,
     handleCreateClick,
     handleEdit,
     handleFilterChange,
     handleFormClose,
+    handleLangChange,
     handleRemove,
     isFormOpen,
     isLoading,
@@ -53,14 +48,6 @@ export const TemplatesList = () => {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-2">
-        <Select
-          name="lang"
-          value={filters.lang}
-          options={LANG_OPTIONS}
-          placeholder="Все языки"
-          onChange={handleFilterChange}
-          className="w-auto min-w-28"
-        />
         <Select
           name="audience"
           value={filters.audience}
@@ -111,7 +98,9 @@ export const TemplatesList = () => {
             <TemplateCard
               key={template.id}
               template={template}
+              lang={getLang(template)}
               preview={getPreview(template)}
+              onLangChange={handleLangChange}
               onCopy={handleCopy}
               onEdit={handleEdit}
               onRemove={handleRemove}

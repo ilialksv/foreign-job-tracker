@@ -26,8 +26,8 @@ export const CompanyNoteRow = ({ note, onRemove }: CompanyNoteRowProps) => {
         </span>
       </div>
       <Button
-        variant="ghost"
-        size="icon"
+        variant="danger-ghost"
+        size="icon-sm"
         icon={<Trash2 />}
         onClick={handleRemoveClick}
         aria-label="Удалить заметку"

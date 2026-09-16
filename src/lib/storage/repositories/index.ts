@@ -14,6 +14,7 @@ import { createDefaultSettings } from "../constants/default-settings";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { createCollectionRepository } from "../utils/create-collection-repository";
 import { createDocumentRepository } from "../utils/create-document-repository";
+import { migrateTemplates } from "../utils/migrate-templates";
 
 export const companiesRepository = createCollectionRepository<Company>({
   key: STORAGE_KEYS.companies,
@@ -42,6 +43,7 @@ export const eventsRepository = createCollectionRepository<CompanyEvent>({
 export const templatesRepository = createCollectionRepository<Template>({
   key: STORAGE_KEYS.templates,
   createSeed: createBuiltInTemplates,
+  migrate: migrateTemplates,
 });
 
 export const settingsRepository = createDocumentRepository<Settings>({

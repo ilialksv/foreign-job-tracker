@@ -60,7 +60,6 @@ export const CompanyHeader = ({ companyId }: CompanyHeaderProps) => {
 
         <div className="flex items-center gap-1.5">
           <Select
-            size="sm"
             className="w-40"
             value={company.status}
             options={STATUS_OPTIONS}
@@ -75,7 +74,7 @@ export const CompanyHeader = ({ companyId }: CompanyHeaderProps) => {
             aria-label="Изменить компанию"
           />
           <Button
-            variant="ghost"
+            variant="danger-ghost"
             size="icon"
             icon={<Trash2 />}
             onClick={handleRemoveClick}

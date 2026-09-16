@@ -6,7 +6,7 @@ import { cn } from "@/shared/utils/cn";
 export const Card = ({ className, ...props }: ComponentProps<"div">) => (
   <div
     className={cn(
-      "rounded-(--radius-panel) border border-line bg-surface shadow-(--shadow-panel)",
+      "rounded-(--radius-panel) border border-line bg-surface",
       className,
     )}
     {...props}
