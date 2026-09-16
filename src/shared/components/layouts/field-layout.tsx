@@ -21,13 +21,13 @@ export const FieldLayout = ({
   className,
   children,
 }: FieldLayoutProps) => (
-  <div className={cn("flex flex-col gap-1.5", className)}>
+  <div className={cn("flex min-w-0 flex-col gap-1.5", className)}>
     {labelText || action ? (
       <div className="flex items-center justify-between gap-2">
         {labelText ? (
           <label
             htmlFor={labelHtmlFor}
-            className="text-muted text-xs font-medium tracking-wide uppercase"
+            className="text-[13px] font-medium text-ink-2"
           >
             {labelText}
           </label>
@@ -38,8 +38,8 @@ export const FieldLayout = ({
     {children}
     {message ? (
       <span
-        className={cn("text-xs", {
-          "text-danger": messageVariant === "error",
+        className={cn("text-[12px] leading-4", {
+          "text-stop": messageVariant === "error",
           "text-muted": messageVariant === "hint",
         })}
       >

@@ -8,24 +8,30 @@ import { Select } from "@/shared/components/ui/select";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import {
   TEMPLATE_AUDIENCE_LABELS,
+  TEMPLATE_AUDIENCE_ORDER,
   TEMPLATE_LANG_LABELS,
+  TEMPLATE_LANG_ORDER,
   TEMPLATE_SCENARIO_LABELS,
+  TEMPLATE_SCENARIO_ORDER,
 } from "@/shared/constants/templates";
 import { TemplateFormDialog } from "@/widgets/templates/template-form-dialog/components/template-form-dialog";
 
 import { useTemplatesList } from "../hooks/use-templates-list";
 
-const LANG_OPTIONS = Object.entries(TEMPLATE_LANG_LABELS).map(
-  ([value, label]) => ({ value, label }),
-);
+const LANG_OPTIONS = TEMPLATE_LANG_ORDER.map((lang) => ({
+  value: lang,
+  label: TEMPLATE_LANG_LABELS[lang],
+}));
 
-const AUDIENCE_OPTIONS = Object.entries(TEMPLATE_AUDIENCE_LABELS).map(
-  ([value, label]) => ({ value, label }),
-);
+const AUDIENCE_OPTIONS = TEMPLATE_AUDIENCE_ORDER.map((audience) => ({
+  value: audience,
+  label: TEMPLATE_AUDIENCE_LABELS[audience],
+}));
 
-const SCENARIO_OPTIONS = Object.entries(TEMPLATE_SCENARIO_LABELS).map(
-  ([value, label]) => ({ value, label }),
-);
+const SCENARIO_OPTIONS = TEMPLATE_SCENARIO_ORDER.map((scenario) => ({
+  value: scenario,
+  label: TEMPLATE_SCENARIO_LABELS[scenario],
+}));
 
 export const TemplatesList = () => {
   const {
@@ -45,14 +51,15 @@ export const TemplatesList = () => {
   } = useTemplatesList();
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+    <div className="flex flex-col gap-5">
+      <div className="flex flex-wrap items-center gap-2">
         <Select
           name="lang"
           value={filters.lang}
           options={LANG_OPTIONS}
           placeholder="Все языки"
           onChange={handleFilterChange}
+          className="w-auto min-w-28"
         />
         <Select
           name="audience"
@@ -60,6 +67,7 @@ export const TemplatesList = () => {
           options={AUDIENCE_OPTIONS}
           placeholder="Любая аудитория"
           onChange={handleFilterChange}
+          className="w-auto min-w-40"
         />
         <Select
           name="scenario"
@@ -67,6 +75,7 @@ export const TemplatesList = () => {
           options={SCENARIO_OPTIONS}
           placeholder="Все сценарии"
           onChange={handleFilterChange}
+          className="w-auto min-w-44"
         />
         <Select
           name="companyId"
@@ -77,16 +86,25 @@ export const TemplatesList = () => {
           }))}
           placeholder="Подставить компанию"
           onChange={handleFilterChange}
+          className="w-auto min-w-44"
         />
-        <Button variant="primary" icon={<Plus />} onClick={handleCreateClick}>
-          Новый шаблон
+        <Button
+          variant="primary"
+          icon={<Plus />}
+          className="ml-auto"
+          onClick={handleCreateClick}
+        >
+          Шаблон
         </Button>
       </div>
 
       {isLoading ? (
         <TemplatesListSkeleton />
       ) : templates.length === 0 ? (
-        <Plug title="Шаблонов нет" description="Добавь первый шаблон." />
+        <Plug
+          title="Шаблонов нет"
+          description="Смягчи фильтры или добавь свой шаблон."
+        />
       ) : (
         <div className="grid gap-3 lg:grid-cols-2">
           {templates.map((template) => (
@@ -116,7 +134,7 @@ export const TemplatesListSkeleton = () => (
   <div className="grid gap-3 lg:grid-cols-2">
     <ItemsList
       count={4}
-      renderItem={(index) => <Skeleton key={index} className="h-40 w-full" />}
+      renderItem={(index) => <Skeleton key={index} className="h-44 w-full" />}
     />
   </div>
 );

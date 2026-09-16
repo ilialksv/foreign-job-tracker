@@ -1,19 +1,14 @@
 import { Download } from "lucide-react";
 
 import { useGetSettings } from "@/actions/settings/hooks/use-get-settings";
-import { FieldLayout } from "@/shared/components/layouts/field-layout";
+import { Section } from "@/shared/components/layouts/section";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
 import { Input } from "@/shared/components/ui/input";
 import { Select } from "@/shared/components/ui/select";
 import { COUNTRIES } from "@/shared/constants/countries";
 
 import { useSettingsData } from "../hooks/use-settings-data";
+import { SettingsDataRow } from "./settings-data-row";
 
 const STRATEGY_OPTIONS = [
   { value: "merge", label: "Объединить с текущими" },
@@ -42,93 +37,80 @@ export const SettingsData = () => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Данные</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-5">
-        <div className="flex flex-col gap-2">
-          <span className="text-ink text-sm font-medium">Экспорт</span>
-          <p className="text-muted text-sm">
-            Один JSON со всеми компаниями, контактами, вакансиями, задачами,
-            ответами на шагах, заметками и шаблонами.
-          </p>
-          <div>
-            <Button
-              icon={<Download />}
-              disabled={isPending}
-              onClick={handleExportClick}
-            >
-              Скачать JSON
-            </Button>
-          </div>
-        </div>
-
-        <div className="border-line flex flex-col gap-2 border-t pt-4">
-          <span className="text-ink text-sm font-medium">Импорт JSON</span>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <FieldLayout labelText="Стратегия">
-              <Select
-                value={strategy}
-                options={STRATEGY_OPTIONS}
-                onChange={handleStrategyChange}
-              />
-            </FieldLayout>
-            <FieldLayout labelText="Файл">
-              <Input
-                type="file"
-                accept="application/json"
-                className="h-10 py-2"
-                onChange={handleJsonFileChange}
-              />
-            </FieldLayout>
-          </div>
-        </div>
-
-        <div className="border-line flex flex-col gap-2 border-t pt-4">
-          <span className="text-ink text-sm font-medium">
-            Импорт компаний из CSV
-          </span>
-          <p className="text-muted text-sm">
-            Колонки: Компания, Очередь, Уровень, Информация, Статус, Дата
-            контакта, Следующий контакт, Нанимающий(е), Инженер(ы).
-          </p>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <FieldLayout labelText="Страна для импортируемых">
-              <Select
-                value={countryCode}
-                options={COUNTRY_OPTIONS}
-                onChange={handleCountryChange}
-              />
-            </FieldLayout>
-            <FieldLayout labelText="Файл">
-              <Input
-                type="file"
-                accept=".csv,text/csv"
-                className="h-10 py-2"
-                onChange={handleCsvFileChange}
-              />
-            </FieldLayout>
-          </div>
-        </div>
-
-        <div className="border-line flex flex-col gap-2 border-t pt-4">
-          <span className="text-ink text-sm font-medium">Очистка</span>
-          <p className="text-muted text-sm">
-            Удаляет компании, контакты, вакансии, задачи, заметки и историю.
-            Шаблоны и настройки остаются.
-          </p>
-          <div>
-            <Button
-              variant="danger"
-              disabled={isPending}
-              onClick={handleClearClick}
-            >
-              Очистить данные
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <Section
+      title="Данные"
+      description="Перенос между браузерами идёт через файл: бэкенда нет."
+      contentClassName="px-0 pb-0"
+      divided
+    >
+      <SettingsDataRow
+        title="Экспорт"
+        description="Один JSON: компании, контакты, вакансии, задачи с ответами, заметки, история и шаблоны."
+        control={
+          <Button
+            icon={<Download />}
+            disabled={isPending}
+            onClick={handleExportClick}
+          >
+            Скачать JSON
+          </Button>
+        }
+      />
+      <SettingsDataRow
+        title="Импорт JSON"
+        description="«Объединить» доливает данные по id, «заменить» стирает текущие и кладёт файл целиком."
+        control={
+          <>
+            <Select
+              value={strategy}
+              options={STRATEGY_OPTIONS}
+              onChange={handleStrategyChange}
+              aria-label="Стратегия импорта"
+            />
+            <Input
+              type="file"
+              accept="application/json"
+              className="h-auto py-1.5"
+              onChange={handleJsonFileChange}
+              aria-label="Файл JSON"
+            />
+          </>
+        }
+      />
+      <SettingsDataRow
+        title="Импорт компаний из CSV"
+        description="Колонки: Компания, Очередь, Уровень, Информация, Статус, Дата контакта, Следующий контакт, Нанимающий(е), Инженер(ы). Дубли по названию пропускаются."
+        control={
+          <>
+            <Select
+              value={countryCode}
+              options={COUNTRY_OPTIONS}
+              onChange={handleCountryChange}
+              aria-label="Страна для импортируемых"
+            />
+            <Input
+              type="file"
+              accept=".csv,text/csv"
+              className="h-auto py-1.5"
+              onChange={handleCsvFileChange}
+              aria-label="Файл CSV"
+            />
+          </>
+        }
+      />
+      <SettingsDataRow
+        title="Очистка"
+        description="Удаляет компании, контакты, вакансии, задачи, заметки и историю. Шаблоны и настройки остаются."
+        control={
+          <Button
+            variant="danger"
+            disabled={isPending}
+            onClick={handleClearClick}
+          >
+            Очистить данные
+          </Button>
+        }
+      />
+    </Section>
   );
 };

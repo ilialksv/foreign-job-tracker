@@ -1,10 +1,5 @@
 import { VacancyRow } from "@/features/company/vacancy-row/components/vacancy-row";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Section } from "@/shared/components/layouts/section";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useCompanyVacancies } from "../hooks/use-company-vacancies";
@@ -20,16 +15,12 @@ export const CompanyVacancies = ({ companyId }: CompanyVacanciesProps) => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Вакансии</CardTitle>
-        <span className="text-muted text-xs">{vacancies.length}</span>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+    <Section title="Вакансии" meta={vacancies.length} divided>
+      <div className="flex flex-col gap-3 flex flex-col gap-3">
         {isLoading ? (
           <CompanyVacanciesSkeleton />
         ) : vacancies.length === 0 ? (
-          <p className="text-muted text-sm">
+          <p className="max-w-prose text-[13px] text-muted">
             Вакансий нет. Шаг «Отклик» можно пропустить, остальное делается так
             же.
           </p>
@@ -46,8 +37,8 @@ export const CompanyVacancies = ({ companyId }: CompanyVacanciesProps) => {
         )}
 
         <CompanyVacancyForm companyId={companyId} />
-      </CardContent>
-    </Card>
+      </div>
+    </Section>
   );
 };
 

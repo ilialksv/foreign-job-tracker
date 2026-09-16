@@ -102,6 +102,14 @@ export const useCompaniesList = () => {
     return Array.from(used);
   }, [companiesQuery.data]);
 
+  const hasActiveFilters = useMemo(
+    () =>
+      filters.query.length > 0 ||
+      filters.countryCode.length > 0 ||
+      filters.status.length > 0,
+    [filters],
+  );
+
   return {
     companies,
     defaultCountryCode: settingsQuery.data?.defaultCountryCode ?? "AE",
@@ -110,6 +118,7 @@ export const useCompaniesList = () => {
     handleCreateClose,
     handleFilterChange,
     handleResetFiltersClick,
+    hasActiveFilters,
     isCreateOpen,
     isLoading: companiesQuery.isLoading || tasksQuery.isLoading,
     openTasksByCompany,

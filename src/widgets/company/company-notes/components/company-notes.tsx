@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Section } from "@/shared/components/layouts/section";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useCompanyNotes } from "../hooks/use-company-notes";
@@ -20,12 +15,8 @@ export const CompanyNotes = ({ companyId }: CompanyNotesProps) => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Заметки</CardTitle>
-        <span className="text-muted text-xs">{notes.length}</span>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+    <Section title="Заметки" meta={notes.length} divided>
+      <div className="flex flex-col gap-3 flex flex-col gap-3">
         {isLoading ? (
           <CompanyNotesSkeleton />
         ) : (
@@ -41,8 +32,8 @@ export const CompanyNotes = ({ companyId }: CompanyNotesProps) => {
         )}
 
         <CompanyNoteForm companyId={companyId} />
-      </CardContent>
-    </Card>
+      </div>
+    </Section>
   );
 };
 

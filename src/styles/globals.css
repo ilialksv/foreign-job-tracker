@@ -1,59 +1,80 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-ground: var(--ground);
+  --color-paper: var(--paper);
   --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
+  --color-surface-2: var(--surface-2);
+  --color-raised: var(--raised);
   --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
   --color-muted: var(--muted);
   --color-line: var(--line);
+  --color-line-2: var(--line-2);
   --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
   --color-accent-soft: var(--accent-soft);
-  --color-danger: var(--danger);
-  --color-danger-soft: var(--danger-soft);
-  --color-warn: var(--warn);
-  --color-warn-soft: var(--warn-soft);
-  --color-ok: var(--ok);
-  --color-ok-soft: var(--ok-soft);
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --color-attention: var(--attention);
+  --color-attention-soft: var(--attention-soft);
+  --color-stop: var(--stop);
+  --color-stop-soft: var(--stop-soft);
+  --color-done: var(--done);
+  --color-done-soft: var(--done-soft);
+
+  --font-display: "Golos Text", "IBM Plex Sans", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-control: 10px;
+  --radius-panel: 14px;
+
+  --shadow-panel: 0 1px 2px rgb(21 24 26 / 0.04);
+  --shadow-raised:
+    0 1px 2px rgb(21 24 26 / 0.05), 0 18px 40px -28px rgb(21 24 26 / 0.35);
 }
 
 :root {
-  --ground: #f2f4f3;
-  --surface: #ffffff;
-  --surface-muted: #f7f9f8;
-  --ink: #111817;
-  --muted: #5c6b69;
-  --line: #dde3e1;
-  --accent: #0b6e63;
-  --accent-soft: #dcebe8;
-  --danger: #a23d2c;
-  --danger-soft: #f6e4e0;
-  --warn: #8a5c12;
-  --warn-soft: #f7ecd8;
-  --ok: #2c7a4b;
-  --ok-soft: #dff0e5;
+  /* Тёплая бумага и чернила с зелёным подтоном: рабочий инструмент, а не лендинг. */
+  --paper: #f3f3f0;
+  --surface: #fbfbf9;
+  --surface-2: #eeeeea;
+  --raised: #ffffff;
+  --ink: #15181a;
+  --ink-2: #454b4d;
+  --muted: #71787a;
+  --line: #e0e1dc;
+  --line-2: #c9cbc4;
+  --accent: #16584a;
+  --accent-ink: #f6fbf8;
+  --accent-soft: #dfeae5;
+  --attention: #8a5a0c;
+  --attention-soft: #f3e9d7;
+  --stop: #9c3c2c;
+  --stop-soft: #f2e0dc;
+  --done: #2f6b4f;
+  --done-soft: #dfeae2;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ground: #0c1211;
-    --surface: #141b1a;
-    --surface-muted: #1a2322;
-    --ink: #e6edeb;
-    --muted: #93a3a0;
-    --line: #263230;
-    --accent: #4ecdb9;
-    --accent-soft: #11302c;
-    --danger: #e08571;
-    --danger-soft: #33201b;
-    --warn: #dba84f;
-    --warn-soft: #2e2515;
-    --ok: #58c08a;
-    --ok-soft: #14301f;
+    --paper: #101312;
+    --surface: #161a19;
+    --surface-2: #1c2120;
+    --raised: #1a1f1e;
+    --ink: #e9edeb;
+    --ink-2: #b6bebb;
+    --muted: #8b9491;
+    --line: #262d2b;
+    --line-2: #39423f;
+    --accent: #5fc3a8;
+    --accent-ink: #0d1211;
+    --accent-soft: #14312a;
+    --attention: #d9a441;
+    --attention-soft: #2e2716;
+    --stop: #dd8874;
+    --stop-soft: #33201c;
+    --done: #6bbd93;
+    --done-soft: #16301f;
     color-scheme: dark;
   }
 }
@@ -65,10 +86,21 @@ body {
 
 body {
   margin: 0;
-  background-color: var(--ground);
+  background-color: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  letter-spacing: -0.015em;
 }
 
 * {
@@ -78,4 +110,19 @@ body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

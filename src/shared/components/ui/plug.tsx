@@ -9,17 +9,20 @@ export type PlugProps = {
   className?: string;
 };
 
+/** Пустое состояние: спокойный белый блок, без пунктира и лишних линий. */
 export const Plug = ({ title, description, action, className }: PlugProps) => (
   <div
     className={cn(
-      "border-line flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center",
+      "flex flex-col items-start gap-2 rounded-(--radius-panel) border border-line bg-surface px-4 py-6 shadow-(--shadow-panel)",
       className,
     )}
   >
-    <p className="text-ink text-sm font-medium">{title}</p>
+    <p className="font-display text-[15px] font-semibold text-ink">{title}</p>
     {description ? (
-      <p className="text-muted max-w-md text-sm">{description}</p>
+      <p className="max-w-prose text-[13px] leading-relaxed text-muted">
+        {description}
+      </p>
     ) : null}
-    {action}
+    {action ? <div className="pt-1">{action}</div> : null}
   </div>
 );

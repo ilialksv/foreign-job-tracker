@@ -2,6 +2,7 @@ import { Copy, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
 import {
   TEMPLATE_AUDIENCE_LABELS,
   TEMPLATE_LANG_LABELS,
@@ -37,43 +38,52 @@ export const TemplateCard = ({
   };
 
   return (
-    <article className="border-line bg-surface flex flex-col gap-3 rounded-xl border px-4 py-3">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div className="flex flex-col gap-1.5">
-          <h3 className="text-ink text-sm font-semibold">{template.title}</h3>
-          <div className="flex flex-wrap gap-2">
+    <Card className="group flex flex-col gap-3 px-4 py-3.5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <h3 className="font-display text-[14.5px] leading-5 font-semibold text-ink">
+            {template.title}
+          </h3>
+          <div className="flex flex-wrap items-center gap-1.5">
             <Badge tone="accent">{TEMPLATE_LANG_LABELS[template.lang]}</Badge>
-            <Badge tone="outline">
+            <span className="font-mono text-[11px] text-muted">
+              {TEMPLATE_SCENARIO_LABELS[template.scenario]} ·{" "}
               {TEMPLATE_AUDIENCE_LABELS[template.audience]}
-            </Badge>
-            <Badge tone="outline">
-              {TEMPLATE_SCENARIO_LABELS[template.scenario]}
-            </Badge>
+            </span>
           </div>
         </div>
-        <div className="flex gap-1">
+        <div className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-sm"
             onClick={handleEditClick}
             icon={<Pencil />}
-            aria-label="Редактировать"
+            aria-label="Редактировать шаблон"
           />
           <Button
             variant="ghost"
-            size="icon"
+            size="icon-sm"
             onClick={handleRemoveClick}
             icon={<Trash2 />}
-            aria-label="Удалить"
+            aria-label="Удалить шаблон"
           />
         </div>
       </div>
-      <p className="text-muted text-sm whitespace-pre-wrap">{preview}</p>
+
+      <p className="rounded-(--radius-control) bg-surface-2 px-3 py-2.5 font-mono text-[12px] leading-relaxed whitespace-pre-wrap text-ink-2">
+        {preview}
+      </p>
+
       <div>
-        <Button size="sm" icon={<Copy />} onClick={handleCopyClick}>
+        <Button
+          size="sm"
+          variant="ghost"
+          icon={<Copy />}
+          onClick={handleCopyClick}
+        >
           Скопировать
         </Button>
       </div>
-    </article>
+    </Card>
   );
 };

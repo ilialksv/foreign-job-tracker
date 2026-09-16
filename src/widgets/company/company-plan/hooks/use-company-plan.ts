@@ -5,7 +5,7 @@ import { useSkipTask } from "@/actions/pipeline/hooks/use-skip-task";
 import { useStartPipeline } from "@/actions/pipeline/hooks/use-start-pipeline";
 import { useGetTasks } from "@/actions/tasks/hooks/use-get-tasks";
 import { useRemoveTask } from "@/actions/tasks/hooks/use-remove-task";
-import { isTaskBlocked } from "@/lib/pipeline";
+import { isTaskBlocked, isTaskOpen } from "@/lib/pipeline";
 
 export const useCompanyPlan = (params: { companyId: string }) => {
   const tasksQuery = useGetTasks();
@@ -66,6 +66,11 @@ export const useCompanyPlan = (params: { companyId: string }) => {
     );
   }, [params.companyId, startPipeline]);
 
+  const openTasksCount = useMemo(
+    () => tasks.filter((task) => isTaskOpen({ task })).length,
+    [tasks],
+  );
+
   return {
     blockedTaskIds,
     handleRemoveClick,
@@ -73,6 +78,7 @@ export const useCompanyPlan = (params: { companyId: string }) => {
     handleStartPipelineClick,
     hasPipeline: tasks.some((task) => task.kind === "stage"),
     isLoading: tasksQuery.isLoading,
+    openTasksCount,
     tasks,
   };
 };

@@ -1,7 +1,7 @@
 import { ExternalLink, Trash2 } from "lucide-react";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { StatusDot } from "@/shared/components/ui/status-dot";
 import {
   CONTACT_LANGUAGE_LABELS,
   CONTACT_ROLE_LABELS,
@@ -21,37 +21,42 @@ export const ContactRow = ({ contact, onRemove }: ContactRowProps) => {
   };
 
   return (
-    <div className="border-line flex flex-wrap items-center justify-between gap-3 border-b py-2 last:border-b-0">
-      <div className="flex min-w-0 flex-col gap-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-ink text-sm font-medium">{contact.name}</span>
-          <Badge tone="outline">{CONTACT_ROLE_LABELS[contact.role]}</Badge>
-          <Badge tone={CONTACT_STATUS_TONES[contact.status]}>
-            {CONTACT_STATUS_LABELS[contact.status]}
-          </Badge>
-        </div>
-        <div className="text-muted flex flex-wrap items-center gap-2 text-xs">
-          {contact.title ? <span>{contact.title}</span> : null}
-          <span>{CONTACT_LANGUAGE_LABELS[contact.language]}</span>
+    <div className="group flex items-start justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
+      <div className="flex min-w-0 items-start gap-2.5">
+        <StatusDot
+          tone={CONTACT_STATUS_TONES[contact.status]}
+          className="mt-2"
+        />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="truncate text-[14px] leading-5 font-medium text-ink">
+            {contact.name}
+          </span>
+          <span className="font-mono text-[11.5px] text-muted">
+            {CONTACT_ROLE_LABELS[contact.role]} ·{" "}
+            {CONTACT_STATUS_LABELS[contact.status]} ·{" "}
+            {CONTACT_LANGUAGE_LABELS[contact.language]}
+          </span>
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex shrink-0 items-center gap-0.5">
         {contact.linkedinUrl ? (
           <a
             href={contact.linkedinUrl}
             target="_blank"
             rel="noreferrer"
-            className="text-muted hover:text-ink inline-flex size-9 items-center justify-center rounded-lg"
+            aria-label="Открыть LinkedIn"
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-ink"
           >
-            <ExternalLink className="size-4" />
+            <ExternalLink className="size-3.5" />
           </a>
         ) : null}
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           onClick={handleRemoveClick}
           icon={<Trash2 />}
           aria-label="Удалить контакт"
+          className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         />
       </div>
     </div>

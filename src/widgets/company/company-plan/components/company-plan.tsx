@@ -1,14 +1,8 @@
 import { Play } from "lucide-react";
 
 import { ItemsList } from "@/shared/components/common/items-list";
+import { Section } from "@/shared/components/layouts/section";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
-import { Plug } from "@/shared/components/ui/plug";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useCompanyPlan } from "../hooks/use-company-plan";
@@ -28,6 +22,7 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
     handleStartPipelineClick,
     hasPipeline,
     isLoading,
+    openTasksCount,
     tasks,
   } = useCompanyPlan({ companyId });
 
@@ -36,33 +31,34 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Этапы и задачи</CardTitle>
-          <div className="flex gap-2">
-            {hasPipeline ? null : (
-              <Button
-                size="sm"
-                variant="primary"
-                icon={<Play />}
-                onClick={handleStartPipelineClick}
-              >
-                Запустить воронку
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="py-0">
-          {tasks.length === 0 ? (
-            <div className="py-4">
-              <Plug
-                title="Шагов пока нет"
-                description="Запусти воронку — появятся триаж, разведка, отклик и коннекты."
-              />
-            </div>
-          ) : (
-            tasks.map((task) => (
+    <div className="flex flex-col gap-8">
+      <Section
+        title="Этапы и задачи"
+        meta={openTasksCount > 0 ? `${openTasksCount} открыто` : undefined}
+        description="Клик по строке открывает шаг."
+        contentClassName="pb-1.5"
+        divided
+        actions={
+          hasPipeline ? null : (
+            <Button
+              size="sm"
+              variant="primary"
+              icon={<Play />}
+              onClick={handleStartPipelineClick}
+            >
+              Запустить воронку
+            </Button>
+          )
+        }
+      >
+        {tasks.length === 0 ? (
+          <p className="px-0 py-3 text-[13px] text-muted">
+            Шагов пока нет. Запусти воронку — появятся триаж, разведка, отклик и
+            коннекты.
+          </p>
+        ) : (
+          <div className="flex flex-col">
+            {tasks.map((task) => (
               <CompanyPlanTask
                 key={task.id}
                 task={task}
@@ -71,20 +67,19 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
                 onSkip={handleSkipClick}
                 onRemove={handleRemoveClick}
               />
-            ))
-          )}
-        </CardContent>
-      </Card>
+            ))}
+          </div>
+        )}
+      </Section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Добавить</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <CompanyTaskForm companyId={companyId} />
-          <CompanyStepForm companyId={companyId} />
-        </CardContent>
-      </Card>
+      <Section
+        title="Добавить"
+        description="Своя задача с датой или шаг воронки вне очереди"
+        contentClassName="flex flex-col gap-5"
+      >
+        <CompanyTaskForm companyId={companyId} />
+        <CompanyStepForm companyId={companyId} />
+      </Section>
     </div>
   );
 };
@@ -92,8 +87,8 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
 export const CompanyPlanSkeleton = () => (
   <div className="flex flex-col gap-3">
     <ItemsList
-      count={4}
-      renderItem={(index) => <Skeleton key={index} className="h-16 w-full" />}
+      count={5}
+      renderItem={(index) => <Skeleton key={index} className="h-12 w-full" />}
     />
   </div>
 );

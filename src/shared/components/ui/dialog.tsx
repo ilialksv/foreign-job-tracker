@@ -25,32 +25,35 @@ export const DialogContent = ({
   ...props
 }: DialogContentProps) => (
   <DialogPrimitive.Portal>
-    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40" />
+    <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-ink/25 backdrop-blur-[2px]" />
     <DialogPrimitive.Content
       className={cn(
-        "border-line bg-surface fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border",
+        "fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-(--radius-panel) border border-line bg-raised shadow-(--shadow-raised)",
         className,
       )}
       {...props}
     >
-      <div className="border-line flex items-start justify-between gap-3 border-b px-4 py-3">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-4">
         <div className="flex flex-col gap-1">
-          <DialogPrimitive.Title className="text-ink text-sm font-semibold">
+          <DialogPrimitive.Title className="font-display text-[16px] leading-6 font-semibold text-ink">
             {title}
           </DialogPrimitive.Title>
           {description ? (
-            <DialogPrimitive.Description className="text-muted text-xs">
+            <DialogPrimitive.Description className="max-w-prose text-[12.5px] leading-relaxed text-muted">
               {description}
             </DialogPrimitive.Description>
           ) : null}
         </div>
-        <DialogPrimitive.Close className="text-muted hover:text-ink cursor-pointer">
+        <DialogPrimitive.Close
+          aria-label="Закрыть"
+          className="cursor-pointer rounded-md p-1 text-muted transition-colors hover:bg-surface-2 hover:text-ink"
+        >
           <X className="size-4" />
         </DialogPrimitive.Close>
       </div>
-      <div className="flex-1 overflow-y-auto px-4 py-4">{children}</div>
+      <div className="flex-1 overflow-y-auto px-5 py-5">{children}</div>
       {footer ? (
-        <div className="border-line flex justify-end gap-2 border-t px-4 py-3">
+        <div className="flex justify-end gap-2 border-t border-line bg-surface px-5 py-3.5">
           {footer}
         </div>
       ) : null}

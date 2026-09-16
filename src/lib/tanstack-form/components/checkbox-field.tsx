@@ -50,7 +50,7 @@ export const CheckboxField = ({
           onBlur={handleBlur}
           {...props}
         />
-        <label htmlFor={name} className="text-ink text-sm">
+        <label htmlFor={name} className="text-[13.5px] leading-5 text-ink">
           {label}
         </label>
       </div>

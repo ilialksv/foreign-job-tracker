@@ -1,20 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Copy } from "lucide-react";
-import { useCallback } from "react";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Panel } from "@/shared/components/ui/panel";
 import { Plug } from "@/shared/components/ui/plug";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { formatDateTime, formatRelativeDay } from "@/shared/utils/dates";
+import { cn } from "@/shared/utils/cn";
 
 import { useRunSession } from "../hooks/use-run-session";
+import type { PostponeOption } from "./run-session-postpone-button";
+import { RunSessionPostponeButton } from "./run-session-postpone-button";
 import { RunSessionForm } from "./run-session-form";
 import { RunSessionNavigator } from "./run-session-navigator";
 
@@ -25,7 +20,11 @@ export type RunSessionProps = {
   onAfterComplete?: (params: { nextTaskId: string | null }) => void;
 };
 
-const POSTPONE_DAYS = { day: 1, threeDays: 3, week: 7 };
+const POSTPONE_OPTIONS: PostponeOption[] = [
+  { days: 1, label: "на день" },
+  { days: 3, label: "на 3 дня" },
+  { days: 7, label: "на неделю" },
+];
 
 export const RunSession = ({
   companyId,
@@ -34,11 +33,9 @@ export const RunSession = ({
   onAfterComplete,
 }: RunSessionProps) => {
   const {
-    blockedByTitles,
     canGoBack,
     canGoForward,
     company,
-    currentMode,
     currentTask,
     handleBackClick,
     handleComplete,
@@ -51,26 +48,17 @@ export const RunSession = ({
     handleSelectTask,
     handleSkipClick,
     handleStartNextCompanyClick,
+    isBlocked,
+    isCompleted,
     isLoading,
     isMutating,
     navigationItems,
     nextQueuedCompany,
     remainingCount,
+    stateLabel,
     step,
     templateText,
   } = useRunSession({ companyId, taskId, onSelectTask, onAfterComplete });
-
-  const handlePostponeOneDay = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_DAYS.day });
-  }, [handlePostponeClick]);
-
-  const handlePostponeThreeDays = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_DAYS.threeDays });
-  }, [handlePostponeClick]);
-
-  const handlePostponeWeek = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_DAYS.week });
-  }, [handlePostponeClick]);
 
   if (isLoading) {
     return <RunSessionSkeleton />;
@@ -96,11 +84,8 @@ export const RunSession = ({
     );
   }
 
-  const isCompleted = currentMode === "completed";
-  const isBlocked = currentMode === "blocked";
-
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <RunSessionNavigator
         items={navigationItems}
         currentTaskId={currentTask.id}
@@ -111,141 +96,137 @@ export const RunSession = ({
         onForward={handleForwardClick}
       />
 
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col gap-1">
-            <CardTitle>{currentTask.title}</CardTitle>
+      <Panel className="flex flex-col gap-5 px-5 py-5">
+        <header className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
             {company ? (
               <Link
                 to="/companies/$companyId"
                 params={{ companyId: company.id }}
-                className="text-accent text-xs"
+                className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase hover:text-ink"
               >
                 {company.name}
               </Link>
             ) : (
-              <span className="text-muted text-xs">Общая задача</span>
+              <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+                Общая задача
+              </span>
             )}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {isCompleted ? (
-              <Badge tone="ok">
-                {currentTask.status === "skipped" ? "пропущен" : "закрыт"}
-                {currentTask.completedAt
-                  ? ` ${formatDateTime(currentTask.completedAt)}`
-                  : ""}
-              </Badge>
-            ) : (
-              <>
-                <Badge tone="outline">
-                  {formatRelativeDay(currentTask.dueAt)}
-                </Badge>
-                <Badge tone="accent">осталось {remainingCount}</Badge>
-              </>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {currentTask.description ? (
-            <p className="text-muted text-sm">{currentTask.description}</p>
-          ) : null}
-
-          {templateText ? (
-            <div className="border-line bg-surface-muted flex flex-col gap-2 rounded-lg border px-3 py-3">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-muted text-xs font-medium tracking-wide uppercase">
-                  Шаблон
+            <div className="flex items-center gap-3">
+              <span
+                className={cn("font-mono text-[12px] tabular-nums", {
+                  "text-done": isCompleted,
+                  "text-attention": isBlocked,
+                  "text-muted": !isCompleted && !isBlocked,
+                })}
+              >
+                {stateLabel}
+              </span>
+              {!isCompleted && !isBlocked && remainingCount > 1 ? (
+                <span className="font-mono text-[12px] text-muted tabular-nums">
+                  осталось {remainingCount}
                 </span>
-                <Button
-                  size="sm"
-                  icon={<Copy />}
-                  onClick={handleCopyTemplateClick}
-                >
-                  Скопировать
-                </Button>
-              </div>
-              <p className="text-ink text-sm whitespace-pre-wrap">
-                {templateText}
-              </p>
+              ) : null}
             </div>
-          ) : null}
-
-          {isBlocked ? (
-            <p className="border-line text-muted rounded-lg border border-dashed px-3 py-3 text-sm">
-              {blockedByTitles.length > 0
-                ? `Шаг ждёт: ${blockedByTitles.join(", ")}`
-                : "Шаг пока недоступен"}
+          </div>
+          <h2 className="font-display text-[20px] leading-7 font-semibold text-ink">
+            {currentTask.title}
+          </h2>
+          {currentTask.description ? (
+            <p className="max-w-prose text-[14px] leading-relaxed text-ink-2">
+              {currentTask.description}
             </p>
-          ) : step ? (
-            <RunSessionForm
-              key={`${currentTask.id}-${currentTask.status}`}
-              step={step}
-              task={currentTask}
-              isCompleted={isCompleted}
-              isPending={isMutating}
-              onComplete={handleComplete}
-              onSaveAnswers={handleSaveAnswers}
-              onReopen={handleReopenClick}
-            />
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {isCompleted ? (
-                <Button
-                  variant="secondary"
-                  disabled={isMutating}
-                  onClick={handleReopenClick}
-                >
-                  Вернуть задачу в работу
-                </Button>
-              ) : (
-                <Button
-                  variant="primary"
-                  disabled={isMutating}
-                  onClick={handleCustomDoneClick}
-                >
-                  Сделано
-                </Button>
-              )}
-            </div>
-          )}
+          ) : null}
+        </header>
 
-          {isCompleted || isBlocked ? null : (
-            <div className="border-line flex flex-wrap items-center gap-2 border-t pt-3">
-              <span className="text-muted text-xs">Отложить:</span>
-              <Button size="sm" variant="ghost" onClick={handlePostponeOneDay}>
-                на день
-              </Button>
+        {templateText ? (
+          <div className="flex flex-col gap-2 rounded-(--radius-control) bg-surface-2 px-3.5 py-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+                Шаблон
+              </span>
               <Button
                 size="sm"
                 variant="ghost"
-                onClick={handlePostponeThreeDays}
+                icon={<Copy />}
+                onClick={handleCopyTemplateClick}
               >
-                на 3 дня
-              </Button>
-              <Button size="sm" variant="ghost" onClick={handlePostponeWeek}>
-                на неделю
-              </Button>
-              <Button size="sm" variant="ghost" onClick={handleSkipClick}>
-                Пропустить шаг
+                Скопировать
               </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <p className="font-mono text-[12.5px] leading-relaxed whitespace-pre-wrap text-ink-2">
+              {templateText}
+            </p>
+          </div>
+        ) : null}
+
+        {isBlocked ? (
+          <p className="rounded-(--radius-control) bg-surface-2 px-3.5 py-3 text-[13px] text-muted">
+            Сначала нужно закрыть предыдущие шаги.
+          </p>
+        ) : step ? (
+          <RunSessionForm
+            key={`${currentTask.id}-${currentTask.status}`}
+            step={step}
+            task={currentTask}
+            isCompleted={isCompleted}
+            isPending={isMutating}
+            onComplete={handleComplete}
+            onSaveAnswers={handleSaveAnswers}
+            onReopen={handleReopenClick}
+          />
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {isCompleted ? (
+              <Button
+                variant="secondary"
+                disabled={isMutating}
+                onClick={handleReopenClick}
+              >
+                Вернуть задачу в работу
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                disabled={isMutating}
+                onClick={handleCustomDoneClick}
+              >
+                Сделано
+              </Button>
+            )}
+          </div>
+        )}
+
+        {isCompleted || isBlocked ? null : (
+          <footer className="flex flex-wrap items-center gap-1.5">
+            <span className="mr-1 text-[12.5px] text-muted">Отложить</span>
+            {POSTPONE_OPTIONS.map((option) => (
+              <RunSessionPostponeButton
+                key={option.days}
+                option={option}
+                onSelect={handlePostponeClick}
+              />
+            ))}
+            <Button
+              size="sm"
+              variant="ghost"
+              className="ml-auto"
+              onClick={handleSkipClick}
+            >
+              Пропустить шаг
+            </Button>
+          </footer>
+        )}
+      </Panel>
     </div>
   );
 };
 
 export const RunSessionSkeleton = () => (
-  <Card>
-    <CardHeader>
-      <Skeleton className="h-4 w-48" />
-      <Skeleton className="h-4 w-24" />
-    </CardHeader>
-    <CardContent className="flex flex-col gap-3">
-      <Skeleton className="h-3 w-full" />
-      <Skeleton className="h-24 w-full" />
-      <Skeleton className="h-10 w-40" />
-    </CardContent>
-  </Card>
+  <Panel className="flex flex-col gap-4 px-5 py-5">
+    <Skeleton className="h-3 w-32" />
+    <Skeleton className="h-6 w-56" />
+    <Skeleton className="h-16 w-full" />
+    <Skeleton className="h-10 w-48" />
+  </Panel>
 );

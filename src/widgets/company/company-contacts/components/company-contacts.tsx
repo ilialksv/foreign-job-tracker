@@ -1,10 +1,5 @@
 import { ContactRow } from "@/features/company/contact-row/components/contact-row";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+import { Section } from "@/shared/components/layouts/section";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useCompanyContacts } from "../hooks/use-company-contacts";
@@ -20,16 +15,12 @@ export const CompanyContacts = ({ companyId }: CompanyContactsProps) => {
   });
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Контакты</CardTitle>
-        <span className="text-muted text-xs">{contacts.length}</span>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-3">
+    <Section title="Контакты" meta={contacts.length} divided>
+      <div className="flex flex-col gap-3 flex flex-col gap-3">
         {isLoading ? (
           <CompanyContactsSkeleton />
         ) : contacts.length === 0 ? (
-          <p className="text-muted text-sm">
+          <p className="max-w-prose text-[13px] text-muted">
             Пока никого. Инженер и нанимающий появятся сами после шага
             «Разведка».
           </p>
@@ -46,8 +37,8 @@ export const CompanyContacts = ({ companyId }: CompanyContactsProps) => {
         )}
 
         <CompanyContactForm companyId={companyId} />
-      </CardContent>
-    </Card>
+      </div>
+    </Section>
   );
 };
 

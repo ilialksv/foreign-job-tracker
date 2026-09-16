@@ -26,7 +26,7 @@ export const TodayUpcomingTask = ({
         <Link
           to="/companies/$companyId/plan/$taskId"
           params={{ companyId, taskId: task.id }}
-          className="min-w-0 flex-1 rounded-lg transition-opacity hover:opacity-80"
+          className="min-w-0 flex-1 rounded-(--radius-control) transition-opacity hover:opacity-80"
         >
           {content}
         </Link>

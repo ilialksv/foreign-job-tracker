@@ -78,7 +78,7 @@ export const RunSessionForm = ({
           <Button variant="secondary" disabled={isPending} onClick={onReopen}>
             Вернуть шаг в работу
           </Button>
-          <span className="text-muted text-xs">
+          <span className="text-[12.5px] text-muted">
             Эффекты прошлого исхода не откатываются
           </span>
         </div>

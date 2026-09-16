@@ -1,7 +1,7 @@
 import { ExternalLink, Trash2 } from "lucide-react";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
+import { StatusDot } from "@/shared/components/ui/status-dot";
 import {
   VACANCY_SOURCE_LABELS,
   VACANCY_STATUS_LABELS,
@@ -21,39 +21,44 @@ export const VacancyRow = ({ vacancy, onRemove }: VacancyRowProps) => {
   };
 
   return (
-    <div className="border-line flex flex-wrap items-center justify-between gap-3 border-b py-2 last:border-b-0">
-      <div className="flex min-w-0 flex-col gap-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-ink text-sm font-medium">{vacancy.title}</span>
-          <Badge tone={VACANCY_STATUS_TONES[vacancy.status]}>
-            {VACANCY_STATUS_LABELS[vacancy.status]}
-          </Badge>
-        </div>
-        <div className="text-muted flex flex-wrap items-center gap-2 text-xs">
-          <span>{VACANCY_SOURCE_LABELS[vacancy.source]}</span>
-          <span>найдена {formatDate(vacancy.foundAt)}</span>
-          {vacancy.appliedAt ? (
-            <span>отклик {formatDate(vacancy.appliedAt)}</span>
-          ) : null}
+    <div className="group flex items-start justify-between gap-3 border-b border-line py-2.5 last:border-b-0">
+      <div className="flex min-w-0 items-start gap-2.5">
+        <StatusDot
+          tone={VACANCY_STATUS_TONES[vacancy.status]}
+          className="mt-2"
+        />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="truncate text-[14px] leading-5 font-medium text-ink">
+            {vacancy.title}
+          </span>
+          <span className="font-mono text-[11.5px] text-muted">
+            {VACANCY_STATUS_LABELS[vacancy.status]} ·{" "}
+            {VACANCY_SOURCE_LABELS[vacancy.source]}
+            {vacancy.appliedAt
+              ? ` · отклик ${formatDate(vacancy.appliedAt)}`
+              : ` · найдена ${formatDate(vacancy.foundAt)}`}
+          </span>
         </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex shrink-0 items-center gap-0.5">
         {vacancy.url ? (
           <a
             href={vacancy.url}
             target="_blank"
             rel="noreferrer"
-            className="text-muted hover:text-ink inline-flex size-9 items-center justify-center rounded-lg"
+            aria-label="Открыть вакансию"
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-surface-2 hover:text-ink"
           >
-            <ExternalLink className="size-4" />
+            <ExternalLink className="size-3.5" />
           </a>
         ) : null}
         <Button
           variant="ghost"
-          size="icon"
+          size="icon-sm"
           onClick={handleRemoveClick}
           icon={<Trash2 />}
           aria-label="Удалить вакансию"
+          className="opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         />
       </div>
     </div>

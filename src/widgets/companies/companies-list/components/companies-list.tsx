@@ -1,11 +1,12 @@
 import { Plus } from "lucide-react";
 
 import {
-  CompanyCard,
-  CompanyCardSkeleton,
-} from "@/features/company/company-card/components/company-card";
+  CompanyRow,
+  CompanyRowSkeleton,
+} from "@/features/company/company-row/components/company-row";
 import { ItemsList } from "@/shared/components/common/items-list";
 import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
 import { Plug } from "@/shared/components/ui/plug";
 import { CompanyFormDialog } from "@/widgets/companies/company-form-dialog/components/company-form-dialog";
 
@@ -21,6 +22,7 @@ export const CompaniesList = () => {
     handleCreateClose,
     handleFilterChange,
     handleResetFiltersClick,
+    hasActiveFilters,
     isCreateOpen,
     isLoading,
     openTasksByCompany,
@@ -30,39 +32,40 @@ export const CompaniesList = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-muted text-sm">
-          Показано {companies.length} из {totalCount}
-        </span>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <CompaniesFilters
+          filters={filters}
+          statusOptions={statusOptions}
+          hasActiveFilters={hasActiveFilters}
+          onChange={handleFilterChange}
+          onReset={handleResetFiltersClick}
+        />
         <Button variant="primary" icon={<Plus />} onClick={handleCreateClick}>
-          Добавить компанию
+          Компания
         </Button>
       </div>
 
-      <CompaniesFilters
-        filters={filters}
-        statusOptions={statusOptions}
-        onChange={handleFilterChange}
-        onReset={handleResetFiltersClick}
-      />
+      <p className="font-mono text-[12px] text-muted tabular-nums">
+        {companies.length} из {totalCount}
+      </p>
 
       {isLoading ? (
         <CompaniesListSkeleton />
       ) : companies.length === 0 ? (
         <Plug
-          title="Компаний нет"
-          description="Добавь компанию вручную или импортируй список CSV в настройках."
+          title="Ничего не нашлось"
+          description="Смягчи фильтры, добавь компанию вручную или импортируй список CSV в настройках."
         />
       ) : (
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <Card className="overflow-hidden">
           {companies.map((company) => (
-            <CompanyCard
+            <CompanyRow
               key={company.id}
               company={company}
               openTasksCount={openTasksByCompany.get(company.id) ?? 0}
             />
           ))}
-        </div>
+        </Card>
       )}
 
       {isCreateOpen ? (
@@ -77,10 +80,10 @@ export const CompaniesList = () => {
 };
 
 export const CompaniesListSkeleton = () => (
-  <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+  <Card className="overflow-hidden">
     <ItemsList
-      count={6}
-      renderItem={(index) => <CompanyCardSkeleton key={index} />}
+      count={8}
+      renderItem={(index) => <CompanyRowSkeleton key={index} />}
     />
-  </div>
+  </Card>
 );

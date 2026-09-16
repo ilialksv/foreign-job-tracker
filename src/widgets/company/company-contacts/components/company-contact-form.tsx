@@ -16,8 +16,11 @@ export const CompanyContactForm = ({ companyId }: CompanyContactFormProps) => {
     <form
       onSubmit={onFormSubmit}
       noValidate
-      className="border-line flex flex-col gap-3 border-t pt-3"
+      className="flex flex-col gap-2.5 rounded-(--radius-control) bg-surface-2 px-3 py-3"
     >
+      <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
+        Новый контакт
+      </span>
       <CompanyContactFormFields form={form} />
       <div>
         <form.AppForm>

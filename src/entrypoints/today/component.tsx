@@ -1,35 +1,37 @@
 import { Link } from "@tanstack/react-router";
-import { Play } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { PageHeader } from "@/shared/components/common/page-header";
+import { Section } from "@/shared/components/layouts/section";
 import { buttonVariants } from "@/shared/constants/button-variants";
 import { RunSession } from "@/widgets/run/run-session/components/run-session";
-import { TodayStats } from "@/widgets/today/today-stats/components/today-stats";
+import { TodayPipeline } from "@/widgets/today/today-pipeline/components/today-pipeline";
 import { TodayUpcoming } from "@/widgets/today/today-upcoming/components/today-upcoming";
 
 export const TodayPage = () => (
-  <div className="flex flex-col gap-6">
+  <div className="flex flex-col gap-8">
     <PageHeader
+      eyebrow="Сессия дня"
       title="Сегодня"
-      description="Одно действие за раз. Дальше решает воронка."
+      description="Одно действие за раз. Что дальше — решает воронка."
       actions={
         <Link to="/run" className={buttonVariants({ variant: "primary" })}>
-          <Play className="size-4" />
           Продолжить поиск
+          <ArrowRight className="size-4" />
         </Link>
       }
     />
 
-    <TodayStats />
+    <TodayPipeline />
 
-    <section className="flex flex-col gap-3">
-      <h2 className="text-ink text-sm font-semibold">Следующее действие</h2>
-      <RunSession />
-    </section>
+    <RunSession />
 
-    <section className="flex flex-col gap-3">
-      <h2 className="text-ink text-sm font-semibold">Ближайшее</h2>
+    <Section
+      title="Ближайшее"
+      description="Просрочено, сегодня и неделя вперёд"
+      divided
+    >
       <TodayUpcoming />
-    </section>
+    </Section>
   </div>
 );

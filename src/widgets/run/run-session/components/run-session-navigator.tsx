@@ -29,16 +29,16 @@ export const RunSessionNavigator = ({
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <Button
-        variant="ghost"
+        variant="secondary"
         size="icon"
         icon={<ChevronLeft />}
         disabled={!canGoBack}
         onClick={onBack}
         aria-label="Предыдущий шаг"
       />
-      <div className="flex flex-1 gap-2 overflow-x-auto pb-1">
+      <div className="flex flex-1 gap-1.5 overflow-x-auto py-0.5">
         {items.map((item, index) => (
           <RunSessionNavigatorItem
             key={item.task.id}
@@ -50,7 +50,7 @@ export const RunSessionNavigator = ({
         ))}
       </div>
       <Button
-        variant="ghost"
+        variant="secondary"
         size="icon"
         icon={<ChevronRight />}
         disabled={!canGoForward}

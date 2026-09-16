@@ -16,11 +16,11 @@ export const CompanyStep = ({ companyId, taskId }: CompanyStepProps) => {
   });
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <Link
         to="/companies/$companyId/plan"
         params={{ companyId }}
-        className="text-muted hover:text-ink inline-flex w-fit items-center gap-1.5 text-xs"
+        className="inline-flex w-fit items-center gap-1.5 font-mono text-[11px] tracking-[0.12em] text-muted uppercase hover:text-ink"
       >
         <ArrowLeft className="size-3.5" />
         Все этапы

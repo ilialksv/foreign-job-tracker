@@ -1,6 +1,6 @@
-import { useNavigate } from "@tanstack/react-router";
 import type { ChangeEvent } from "react";
 import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { useGetCompany } from "@/actions/companies/hooks/use-get-company";
@@ -9,7 +9,12 @@ import { useUpdateCompany } from "@/actions/companies/hooks/use-update-company";
 import { useStartPipeline } from "@/actions/pipeline/hooks/use-start-pipeline";
 import { useGetTasks } from "@/actions/tasks/hooks/use-get-tasks";
 import { isTaskOpen } from "@/lib/pipeline";
-import { COMPANY_STATUS_ORDER } from "@/shared/constants/company";
+import {
+  COMPANY_DEPTH_LABELS,
+  COMPANY_STATUS_ORDER,
+  ENGINEERING_SIZE_LABELS,
+} from "@/shared/constants/company";
+import { getCountryLabel } from "@/shared/constants/countries";
 
 export const useCompanySummary = (params: { companyId: string }) => {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -33,6 +38,30 @@ export const useCompanySummary = (params: { companyId: string }) => {
   const openTasksCount = companyTasks.filter((task) =>
     isTaskOpen({ task }),
   ).length;
+
+  const company = companyQuery.data ?? null;
+
+  const metaItems = useMemo(() => {
+    if (!company) {
+      return [];
+    }
+
+    const items = [
+      getCountryLabel(company.countryCode),
+      COMPANY_DEPTH_LABELS[company.depth],
+      ENGINEERING_SIZE_LABELS[company.engineeringSize],
+    ];
+
+    if (company.queueTier) {
+      items.push(company.queueTier);
+    }
+
+    if (company.hasRussianSpeakers) {
+      items.push("есть русскоязычные");
+    }
+
+    return items;
+  }, [company]);
 
   const handleStatusChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
@@ -92,7 +121,8 @@ export const useCompanySummary = (params: { companyId: string }) => {
   }, []);
 
   return {
-    company: companyQuery.data ?? null,
+    company,
+    metaItems,
     handleEditClick,
     handleEditClose,
     handleRemoveClick,

@@ -2,9 +2,10 @@ import { PageHeader } from "@/shared/components/common/page-header";
 import { RunSession } from "@/widgets/run/run-session/components/run-session";
 
 export const RunPage = () => (
-  <div className="flex flex-col gap-5">
+  <div className="flex flex-col gap-6">
     <PageHeader
-      title="Режим выполнения"
+      eyebrow="Сквозная очередь"
+      title="Продолжить поиск"
       description="Делай то, что на экране, отмечай результат — следующий шаг подставится сам."
     />
     <RunSession />

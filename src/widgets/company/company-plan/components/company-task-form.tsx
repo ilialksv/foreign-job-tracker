@@ -11,7 +11,7 @@ export const CompanyTaskForm = ({ companyId }: CompanyTaskFormProps) => {
 
   return (
     <form onSubmit={onFormSubmit} noValidate className="flex flex-col gap-2">
-      <span className="text-muted text-xs font-medium tracking-wide uppercase">
+      <span className="font-mono text-[11px] tracking-[0.12em] text-muted uppercase">
         Своя задача
       </span>
       <div className="grid items-end gap-2 sm:grid-cols-[1fr_auto_auto]">

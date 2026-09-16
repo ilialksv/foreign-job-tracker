@@ -11,12 +11,6 @@ export type RunSessionNavigatorItemProps = {
   onSelect: (params: { id: string }) => void;
 };
 
-const MODE_DOT_CLASS = {
-  active: "bg-accent",
-  completed: "bg-ok",
-  blocked: "bg-muted/40",
-} as const;
-
 export const RunSessionNavigatorItem = ({
   item,
   index,
@@ -27,7 +21,6 @@ export const RunSessionNavigatorItem = ({
     onSelect({ id: item.task.id });
   }, [item.task.id, onSelect]);
 
-  const isSkipped = item.task.status === "skipped";
   const hint =
     item.blockedBy.length > 0
       ? `Ждёт: ${item.blockedBy.join(", ")}`
@@ -39,26 +32,34 @@ export const RunSessionNavigatorItem = ({
       disabled={!item.isSelectable}
       onClick={handleClick}
       title={hint}
+      aria-current={isCurrent}
       className={cn(
-        "flex shrink-0 items-center gap-2 rounded-lg border px-3 py-1.5 text-xs transition-colors",
+        "flex h-9 shrink-0 items-center gap-2 rounded-(--radius-control) border px-2.5 text-[13px] transition-colors",
         {
           "border-accent bg-accent-soft text-ink": isCurrent,
-          "border-line bg-surface text-muted hover:text-ink":
+          "border-line bg-surface text-ink-2 hover:border-line-2 hover:bg-surface-2":
             !isCurrent && item.isSelectable,
-          "border-line text-muted/60 cursor-not-allowed border-dashed":
+          "border-dashed border-line bg-transparent text-muted/70":
             !item.isSelectable,
-          "line-through": isSkipped,
         },
       )}
     >
       <span
-        className={cn(
-          "size-1.5 shrink-0 rounded-full",
-          MODE_DOT_CLASS[item.mode],
-        )}
-      />
-      <span className="tabular-nums">{index + 1}.</span>
-      <span className="max-w-40 truncate">{item.task.title}</span>
+        className={cn("font-mono text-[11px] tabular-nums", {
+          "text-accent": isCurrent,
+          "text-done": !isCurrent && item.mode === "completed",
+          "text-muted": !isCurrent && item.mode !== "completed",
+        })}
+      >
+        {index + 1}
+      </span>
+      <span
+        className={cn("max-w-36 truncate", {
+          "line-through decoration-line-2": item.task.status === "skipped",
+        })}
+      >
+        {item.task.title}
+      </span>
     </button>
   );
 };

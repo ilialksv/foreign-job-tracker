@@ -16,6 +16,7 @@ import type { StepOption } from "@/lib/pipeline";
 import { getStepDefinition } from "@/lib/pipeline";
 import type { TaskAnswers } from "@/shared/types/entities";
 import { copyText } from "@/shared/utils/copy-text";
+import { formatDateTime, formatRelativeDay } from "@/shared/utils/dates";
 import { fillTemplate } from "@/shared/utils/fill-template";
 
 import {
@@ -142,6 +143,31 @@ export const useRunSession = (params: {
     () => getStepDefinition({ stepKey: currentTask?.stepKey ?? null }),
     [currentTask],
   );
+
+  const isCompleted = currentMode === "completed";
+  const isBlocked = currentMode === "blocked";
+
+  const stateLabel = useMemo(() => {
+    if (!currentTask) {
+      return "";
+    }
+
+    if (isBlocked) {
+      return blockedByTitles.length > 0
+        ? `ждёт: ${blockedByTitles.join(", ")}`
+        : "шаг недоступен";
+    }
+
+    if (isCompleted) {
+      const prefix = currentTask.status === "skipped" ? "пропущен" : "закрыт";
+
+      return currentTask.completedAt
+        ? `${prefix} ${formatDateTime(currentTask.completedAt)}`
+        : prefix;
+    }
+
+    return formatRelativeDay(currentTask.dueAt);
+  }, [blockedByTitles, currentTask, isBlocked, isCompleted]);
 
   const nextQueuedCompany = useMemo(() => {
     if (params.companyId) {
@@ -385,6 +411,9 @@ export const useRunSession = (params: {
   return {
     blockedByTitles,
     canGoBack: currentIndex > 0,
+    isBlocked,
+    isCompleted,
+    stateLabel,
     canGoForward:
       currentIndex >= 0 && currentIndex < selectableItems.length - 1,
     company,
