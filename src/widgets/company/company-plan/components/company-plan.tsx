@@ -13,6 +13,7 @@ import { Input } from "@/shared/components/ui/input";
 import { Plug } from "@/shared/components/ui/plug";
 import { Select } from "@/shared/components/ui/select";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { buttonVariants } from "@/shared/constants/button-variants";
 
 import { useCompanyPlan } from "../hooks/use-company-plan";
 import { CompanyPlanTask } from "./company-plan-task";
