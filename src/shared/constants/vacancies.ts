@@ -21,3 +21,10 @@ export const VACANCY_STATUS_TONES: Record<VacancyStatus, BadgeTone> = {
   rejected: "danger",
   closed: "neutral",
 };
+
+export const VACANCY_SOURCE_ORDER: VacancySource[] = [
+  "careers",
+  "linkedin",
+  "job_board",
+  "other",
+];

@@ -12,48 +12,64 @@ import {
 } from "@/shared/components/ui/card";
 import { Plug } from "@/shared/components/ui/plug";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { formatRelativeDay } from "@/shared/utils/dates";
+import { formatDateTime, formatRelativeDay } from "@/shared/utils/dates";
 
 import { useRunSession } from "../hooks/use-run-session";
-import { RunSessionFields } from "./run-session-fields";
-import { RunSessionOptionButton } from "./run-session-options";
+import { RunSessionForm } from "./run-session-form";
+import { RunSessionNavigator } from "./run-session-navigator";
 
 export type RunSessionProps = {
   companyId?: string;
+  taskId?: string;
+  onSelectTask?: (params: { id: string }) => void;
+  onAfterComplete?: (params: { nextTaskId: string | null }) => void;
 };
 
-const POSTPONE_OPTIONS = [1, 3, 7];
+const POSTPONE_DAYS = { day: 1, threeDays: 3, week: 7 };
 
-export const RunSession = ({ companyId }: RunSessionProps) => {
+export const RunSession = ({
+  companyId,
+  taskId,
+  onSelectTask,
+  onAfterComplete,
+}: RunSessionProps) => {
   const {
-    answers,
+    blockedByTitles,
+    canGoBack,
+    canGoForward,
     company,
+    currentMode,
     currentTask,
-    handleAnswerChange,
+    handleBackClick,
+    handleComplete,
     handleCopyTemplateClick,
-    handleCustomDone,
-    handleOptionClick,
+    handleCustomDoneClick,
+    handleForwardClick,
     handlePostponeClick,
+    handleReopenClick,
+    handleSaveAnswers,
+    handleSelectTask,
     handleSkipClick,
     handleStartNextCompanyClick,
     isLoading,
     isMutating,
+    navigationItems,
     nextQueuedCompany,
     remainingCount,
     step,
     templateText,
-  } = useRunSession({ companyId });
+  } = useRunSession({ companyId, taskId, onSelectTask, onAfterComplete });
 
   const handlePostponeOneDay = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_OPTIONS[0] });
+    handlePostponeClick({ days: POSTPONE_DAYS.day });
   }, [handlePostponeClick]);
 
   const handlePostponeThreeDays = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_OPTIONS[1] });
+    handlePostponeClick({ days: POSTPONE_DAYS.threeDays });
   }, [handlePostponeClick]);
 
   const handlePostponeWeek = useCallback(() => {
-    handlePostponeClick({ days: POSTPONE_OPTIONS[2] });
+    handlePostponeClick({ days: POSTPONE_DAYS.week });
   }, [handlePostponeClick]);
 
   if (isLoading) {
@@ -80,99 +96,143 @@ export const RunSession = ({ companyId }: RunSessionProps) => {
     );
   }
 
+  const isCompleted = currentMode === "completed";
+  const isBlocked = currentMode === "blocked";
+
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col gap-1">
-          <CardTitle>{currentTask.title}</CardTitle>
-          {company ? (
-            <Link
-              to="/companies/$companyId"
-              params={{ companyId: company.id }}
-              className="text-xs text-accent"
-            >
-              {company.name}
-            </Link>
+    <div className="flex flex-col gap-3">
+      <RunSessionNavigator
+        items={navigationItems}
+        currentTaskId={currentTask.id}
+        canGoBack={canGoBack}
+        canGoForward={canGoForward}
+        onSelect={handleSelectTask}
+        onBack={handleBackClick}
+        onForward={handleForwardClick}
+      />
+
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col gap-1">
+            <CardTitle>{currentTask.title}</CardTitle>
+            {company ? (
+              <Link
+                to="/companies/$companyId"
+                params={{ companyId: company.id }}
+                className="text-accent text-xs"
+              >
+                {company.name}
+              </Link>
+            ) : (
+              <span className="text-muted text-xs">Общая задача</span>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {isCompleted ? (
+              <Badge tone="ok">
+                {currentTask.status === "skipped" ? "пропущен" : "закрыт"}
+                {currentTask.completedAt
+                  ? ` ${formatDateTime(currentTask.completedAt)}`
+                  : ""}
+              </Badge>
+            ) : (
+              <>
+                <Badge tone="outline">
+                  {formatRelativeDay(currentTask.dueAt)}
+                </Badge>
+                <Badge tone="accent">осталось {remainingCount}</Badge>
+              </>
+            )}
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          {currentTask.description ? (
+            <p className="text-muted text-sm">{currentTask.description}</p>
+          ) : null}
+
+          {templateText ? (
+            <div className="border-line bg-surface-muted flex flex-col gap-2 rounded-lg border px-3 py-3">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-muted text-xs font-medium tracking-wide uppercase">
+                  Шаблон
+                </span>
+                <Button
+                  size="sm"
+                  icon={<Copy />}
+                  onClick={handleCopyTemplateClick}
+                >
+                  Скопировать
+                </Button>
+              </div>
+              <p className="text-ink text-sm whitespace-pre-wrap">
+                {templateText}
+              </p>
+            </div>
+          ) : null}
+
+          {isBlocked ? (
+            <p className="border-line text-muted rounded-lg border border-dashed px-3 py-3 text-sm">
+              {blockedByTitles.length > 0
+                ? `Шаг ждёт: ${blockedByTitles.join(", ")}`
+                : "Шаг пока недоступен"}
+            </p>
+          ) : step ? (
+            <RunSessionForm
+              key={`${currentTask.id}-${currentTask.status}`}
+              step={step}
+              task={currentTask}
+              isCompleted={isCompleted}
+              isPending={isMutating}
+              onComplete={handleComplete}
+              onSaveAnswers={handleSaveAnswers}
+              onReopen={handleReopenClick}
+            />
           ) : (
-            <span className="text-xs text-muted">Общая задача</span>
+            <div className="flex flex-wrap gap-2">
+              {isCompleted ? (
+                <Button
+                  variant="secondary"
+                  disabled={isMutating}
+                  onClick={handleReopenClick}
+                >
+                  Вернуть задачу в работу
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  disabled={isMutating}
+                  onClick={handleCustomDoneClick}
+                >
+                  Сделано
+                </Button>
+              )}
+            </div>
           )}
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge tone="outline">{formatRelativeDay(currentTask.dueAt)}</Badge>
-          <Badge tone="accent">осталось {remainingCount}</Badge>
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {currentTask.description ? (
-          <p className="text-sm text-muted">{currentTask.description}</p>
-        ) : null}
 
-        {step ? (
-          <RunSessionFields
-            fields={step.fields}
-            answers={answers}
-            onChange={handleAnswerChange}
-          />
-        ) : null}
-
-        {templateText ? (
-          <div className="flex flex-col gap-2 rounded-lg border border-line bg-surface-muted px-3 py-3">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-medium tracking-wide text-muted uppercase">
-                Шаблон
-              </span>
+          {isCompleted || isBlocked ? null : (
+            <div className="border-line flex flex-wrap items-center gap-2 border-t pt-3">
+              <span className="text-muted text-xs">Отложить:</span>
+              <Button size="sm" variant="ghost" onClick={handlePostponeOneDay}>
+                на день
+              </Button>
               <Button
                 size="sm"
-                icon={<Copy />}
-                onClick={handleCopyTemplateClick}
+                variant="ghost"
+                onClick={handlePostponeThreeDays}
               >
-                Скопировать
+                на 3 дня
+              </Button>
+              <Button size="sm" variant="ghost" onClick={handlePostponeWeek}>
+                на неделю
+              </Button>
+              <Button size="sm" variant="ghost" onClick={handleSkipClick}>
+                Пропустить шаг
               </Button>
             </div>
-            <p className="text-sm whitespace-pre-wrap text-ink">
-              {templateText}
-            </p>
-          </div>
-        ) : null}
-
-        <div className="flex flex-wrap gap-2">
-          {step ? (
-            step.options.map((option) => (
-              <RunSessionOptionButton
-                key={option.value}
-                option={option}
-                disabled={isMutating}
-                onSelect={handleOptionClick}
-              />
-            ))
-          ) : (
-            <Button
-              variant="primary"
-              disabled={isMutating}
-              onClick={handleCustomDone}
-            >
-              Сделано
-            </Button>
           )}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 border-t border-line pt-3">
-          <span className="text-xs text-muted">Отложить:</span>
-          <Button size="sm" variant="ghost" onClick={handlePostponeOneDay}>
-            на день
-          </Button>
-          <Button size="sm" variant="ghost" onClick={handlePostponeThreeDays}>
-            на 3 дня
-          </Button>
-          <Button size="sm" variant="ghost" onClick={handlePostponeWeek}>
-            на неделю
-          </Button>
-          <Button size="sm" variant="ghost" onClick={handleSkipClick}>
-            Пропустить шаг
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

@@ -21,16 +21,16 @@ export const ContactRow = ({ contact, onRemove }: ContactRowProps) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-2 last:border-b-0">
+    <div className="border-line flex flex-wrap items-center justify-between gap-3 border-b py-2 last:border-b-0">
       <div className="flex min-w-0 flex-col gap-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium text-ink">{contact.name}</span>
+          <span className="text-ink text-sm font-medium">{contact.name}</span>
           <Badge tone="outline">{CONTACT_ROLE_LABELS[contact.role]}</Badge>
           <Badge tone={CONTACT_STATUS_TONES[contact.status]}>
             {CONTACT_STATUS_LABELS[contact.status]}
           </Badge>
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+        <div className="text-muted flex flex-wrap items-center gap-2 text-xs">
           {contact.title ? <span>{contact.title}</span> : null}
           <span>{CONTACT_LANGUAGE_LABELS[contact.language]}</span>
         </div>
@@ -41,7 +41,7 @@ export const ContactRow = ({ contact, onRemove }: ContactRowProps) => {
             href={contact.linkedinUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex size-9 items-center justify-center rounded-lg text-muted hover:text-ink"
+            className="text-muted hover:text-ink inline-flex size-9 items-center justify-center rounded-lg"
           >
             <ExternalLink className="size-4" />
           </a>

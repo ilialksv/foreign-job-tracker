@@ -5,24 +5,44 @@ import { useGetContacts } from "@/actions/contacts/hooks/use-get-contacts";
 import { useCompleteTask } from "@/actions/pipeline/hooks/use-complete-task";
 import { useGetActionableTasks } from "@/actions/pipeline/hooks/use-get-actionable-tasks";
 import { usePostponeTask } from "@/actions/pipeline/hooks/use-postpone-task";
+import { useReopenTask } from "@/actions/pipeline/hooks/use-reopen-task";
 import { useSkipTask } from "@/actions/pipeline/hooks/use-skip-task";
 import { useStartPipeline } from "@/actions/pipeline/hooks/use-start-pipeline";
+import { useUpdateTaskAnswers } from "@/actions/pipeline/hooks/use-update-task-answers";
 import { useGetSettings } from "@/actions/settings/hooks/use-get-settings";
 import { useGetTemplates } from "@/actions/templates/hooks/use-get-templates";
 import { useGetVacancies } from "@/actions/vacancies/hooks/use-get-vacancies";
 import type { StepOption } from "@/lib/pipeline";
 import { getStepDefinition } from "@/lib/pipeline";
-import type { TaskAnswerValue, TaskAnswers } from "@/shared/types/entities";
+import type { TaskAnswers } from "@/shared/types/entities";
 import { copyText } from "@/shared/utils/copy-text";
 import { fillTemplate } from "@/shared/utils/fill-template";
 
+import {
+  getBlockingTaskTitles,
+  getNavigationTasks,
+  getTaskMode,
+} from "../utils/get-navigation-tasks";
 import {
   getStepContact,
   getTemplateVariables,
 } from "../utils/get-template-variables";
 
-export const useRunSession = (params: { companyId?: string }) => {
-  const [answers, setAnswers] = useState<TaskAnswers>({});
+export const useRunSession = (params: {
+  companyId?: string;
+  /** Выбранный шаг, когда страница управляется маршрутом. */
+  taskId?: string;
+  onSelectTask?: (selectParams: { id: string }) => void;
+  onAfterComplete?: (completeParams: { nextTaskId: string | null }) => void;
+}) => {
+  const [localSelectedTaskId, setLocalSelectedTaskId] = useState<string | null>(
+    null,
+  );
+
+  const isRouteControlled = Boolean(params.onSelectTask);
+  const selectedTaskId = isRouteControlled
+    ? (params.taskId ?? null)
+    : localSelectedTaskId;
 
   const { actionableTasks, companies, tasks, isLoading } =
     useGetActionableTasks({ companyId: params.companyId });
@@ -32,11 +52,83 @@ export const useRunSession = (params: { companyId?: string }) => {
   const settingsQuery = useGetSettings();
 
   const completeTask = useCompleteTask();
+  const updateTaskAnswers = useUpdateTaskAnswers();
+  const reopenTask = useReopenTask();
   const postponeTask = usePostponeTask();
   const skipTask = useSkipTask();
   const startPipeline = useStartPipeline();
 
-  const currentTask = actionableTasks[0] ?? null;
+  const navigationItems = useMemo(
+    () =>
+      getNavigationTasks({
+        tasks,
+        actionableTasks,
+        companyId: params.companyId,
+      }),
+    [actionableTasks, params.companyId, tasks],
+  );
+
+  const selectableItems = useMemo(
+    () => navigationItems.filter((item) => item.isSelectable),
+    [navigationItems],
+  );
+
+  const currentTask = useMemo(() => {
+    if (selectedTaskId) {
+      const selected = navigationItems.find(
+        (item) => item.task.id === selectedTaskId,
+      );
+
+      if (selected) {
+        return selected.task;
+      }
+    }
+
+    if (actionableTasks.length > 0) {
+      return actionableTasks[0];
+    }
+
+    return selectableItems[selectableItems.length - 1]?.task ?? null;
+  }, [actionableTasks, navigationItems, selectableItems, selectedTaskId]);
+
+  const currentMode = useMemo(() => {
+    if (!currentTask) {
+      return null;
+    }
+
+    return getTaskMode({ task: currentTask, tasks });
+  }, [currentTask, tasks]);
+
+  const currentIndex = useMemo(
+    () => selectableItems.findIndex((item) => item.task.id === currentTask?.id),
+    [currentTask, selectableItems],
+  );
+
+  const blockedByTitles = useMemo(() => {
+    if (!currentTask || currentMode !== "blocked") {
+      return [];
+    }
+
+    return getBlockingTaskTitles({ task: currentTask, tasks });
+  }, [currentMode, currentTask, tasks]);
+
+  const nextTaskId = useMemo(() => {
+    const currentPosition = navigationItems.findIndex(
+      (item) => item.task.id === currentTask?.id,
+    );
+    const openItems = navigationItems.filter(
+      (item) => item.mode !== "completed" && item.task.id !== currentTask?.id,
+    );
+    const nextItem =
+      navigationItems
+        .slice(currentPosition + 1)
+        .find(
+          (item) =>
+            item.mode !== "completed" && item.task.id !== currentTask?.id,
+        ) ?? openItems[0];
+
+    return nextItem?.task.id ?? null;
+  }, [currentTask, navigationItems]);
 
   const company = useMemo(() => {
     if (!currentTask?.companyId) {
@@ -73,11 +165,7 @@ export const useRunSession = (params: { companyId?: string }) => {
     }
 
     const contacts = contactsQuery.data ?? [];
-    const contact = getStepContact({
-      step,
-      contacts,
-      companyId: company.id,
-    });
+    const contact = getStepContact({ step, contacts, companyId: company.id });
     const language = contact?.language ?? "en";
     const templates = templatesQuery.data ?? [];
     const matching =
@@ -115,27 +203,60 @@ export const useRunSession = (params: { companyId?: string }) => {
     vacanciesQuery.data,
   ]);
 
-  const handleAnswerChange = useCallback(
-    (changeParams: { key: string; value: TaskAnswerValue }) => {
-      setAnswers((previous) => ({
-        ...previous,
-        [changeParams.key]: changeParams.value,
-      }));
+  const handleSelectTask = useCallback(
+    (selectParams: { id: string }) => {
+      if (params.onSelectTask) {
+        params.onSelectTask(selectParams);
+
+        return;
+      }
+
+      setLocalSelectedTaskId(selectParams.id);
     },
-    [],
+    [params],
   );
 
-  const handleOptionClick = useCallback(
-    (option: StepOption) => {
+  const handleAfterComplete = useCallback(() => {
+    if (params.onAfterComplete) {
+      params.onAfterComplete({ nextTaskId });
+
+      return;
+    }
+
+    setLocalSelectedTaskId(null);
+  }, [nextTaskId, params]);
+
+  const handleBackClick = useCallback(() => {
+    const previousItem = selectableItems[currentIndex - 1];
+
+    if (previousItem) {
+      handleSelectTask({ id: previousItem.task.id });
+    }
+  }, [currentIndex, handleSelectTask, selectableItems]);
+
+  const handleForwardClick = useCallback(() => {
+    const nextItem = selectableItems[currentIndex + 1];
+
+    if (nextItem) {
+      handleSelectTask({ id: nextItem.task.id });
+    }
+  }, [currentIndex, handleSelectTask, selectableItems]);
+
+  const handleComplete = useCallback(
+    (completeParams: { option: StepOption; answers: TaskAnswers }) => {
       if (!currentTask) {
         return;
       }
 
       completeTask.mutate(
-        { task: currentTask, answers, option },
+        {
+          task: currentTask,
+          answers: completeParams.answers,
+          option: completeParams.option,
+        },
         {
           onSuccess: () => {
-            setAnswers({});
+            handleAfterComplete();
             toast.success("Шаг закрыт");
           },
           onError: () => {
@@ -144,24 +265,60 @@ export const useRunSession = (params: { companyId?: string }) => {
         },
       );
     },
-    [answers, completeTask, currentTask],
+    [completeTask, currentTask, handleAfterComplete],
   );
 
-  const handleCustomDone = useCallback(() => {
+  const handleSaveAnswers = useCallback(
+    (saveParams: { answers: TaskAnswers }) => {
+      if (!currentTask) {
+        return;
+      }
+
+      updateTaskAnswers.mutate(
+        { id: currentTask.id, answers: saveParams.answers },
+        {
+          onSuccess: () => {
+            toast.success("Ответы сохранены");
+          },
+          onError: () => {
+            toast.error("Не получилось сохранить ответы");
+          },
+        },
+      );
+    },
+    [currentTask, updateTaskAnswers],
+  );
+
+  const handleReopenClick = useCallback(() => {
+    if (!currentTask) {
+      return;
+    }
+
+    reopenTask.mutate(
+      { id: currentTask.id },
+      {
+        onSuccess: () => {
+          toast.success("Шаг вернулся в работу");
+        },
+      },
+    );
+  }, [currentTask, reopenTask]);
+
+  const handleCustomDoneClick = useCallback(() => {
     if (!currentTask) {
       return;
     }
 
     completeTask.mutate(
-      { task: currentTask, answers, option: null },
+      { task: currentTask, answers: {}, option: null },
       {
         onSuccess: () => {
-          setAnswers({});
+          handleAfterComplete();
           toast.success("Задача закрыта");
         },
       },
     );
-  }, [answers, completeTask, currentTask]);
+  }, [completeTask, currentTask, handleAfterComplete]);
 
   const handlePostponeClick = useCallback(
     (postponeParams: { days: number }) => {
@@ -173,13 +330,13 @@ export const useRunSession = (params: { companyId?: string }) => {
         { id: currentTask.id, days: postponeParams.days },
         {
           onSuccess: () => {
-            setAnswers({});
+            handleAfterComplete();
             toast.success(`Отложено на ${postponeParams.days} дн.`);
           },
         },
       );
     },
-    [currentTask, postponeTask],
+    [currentTask, handleAfterComplete, postponeTask],
   );
 
   const handleSkipClick = useCallback(() => {
@@ -191,12 +348,12 @@ export const useRunSession = (params: { companyId?: string }) => {
       { id: currentTask.id },
       {
         onSuccess: () => {
-          setAnswers({});
+          handleAfterComplete();
           toast.success("Шаг пропущен");
         },
       },
     );
-  }, [currentTask, skipTask]);
+  }, [currentTask, handleAfterComplete, skipTask]);
 
   const handleStartNextCompanyClick = useCallback(() => {
     if (!nextQueuedCompany) {
@@ -226,18 +383,31 @@ export const useRunSession = (params: { companyId?: string }) => {
   }, [templateText]);
 
   return {
-    answers,
+    blockedByTitles,
+    canGoBack: currentIndex > 0,
+    canGoForward:
+      currentIndex >= 0 && currentIndex < selectableItems.length - 1,
     company,
+    currentMode,
     currentTask,
-    handleAnswerChange,
+    handleBackClick,
+    handleComplete,
     handleCopyTemplateClick,
-    handleCustomDone,
-    handleOptionClick,
+    handleCustomDoneClick,
+    handleForwardClick,
     handlePostponeClick,
+    handleReopenClick,
+    handleSaveAnswers,
+    handleSelectTask,
     handleSkipClick,
     handleStartNextCompanyClick,
     isLoading,
-    isMutating: completeTask.isPending || skipTask.isPending,
+    isMutating:
+      completeTask.isPending ||
+      skipTask.isPending ||
+      reopenTask.isPending ||
+      updateTaskAnswers.isPending,
+    navigationItems,
     nextQueuedCompany,
     remainingCount: actionableTasks.length,
     step,

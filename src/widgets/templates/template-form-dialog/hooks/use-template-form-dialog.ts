@@ -1,102 +1,81 @@
-import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { useCreateTemplate } from "@/actions/templates/hooks/use-create-template";
 import { useUpdateTemplate } from "@/actions/templates/hooks/use-update-template";
-import type {
-  Template,
-  TemplateAudience,
-  TemplateLang,
-  TemplateScenario,
-} from "@/shared/types/entities";
+import { useAppForm } from "@/lib/tanstack-form";
+import { useFormHandlers } from "@/lib/tanstack-form/hooks/use-form-handlers";
+import type { Template } from "@/shared/types/entities";
 
-export type TemplateFormValues = {
-  title: string;
-  lang: TemplateLang;
-  audience: TemplateAudience;
-  scenario: TemplateScenario;
-  body: string;
-};
-
-const createInitialValues = (params: {
-  template: Template | null;
-}): TemplateFormValues => ({
-  title: params.template?.title ?? "",
-  lang: params.template?.lang ?? "en",
-  audience: params.template?.audience ?? "any",
-  scenario: params.template?.scenario ?? "custom",
-  body: params.template?.body ?? "",
-});
+import { prepareTemplateFormValues } from "../utils/prepare-template-form-values";
+import {
+  templateFormMatchValidateFn,
+  templateFormValidateFn,
+} from "../utils/template-form-helpers";
 
 export const useTemplateFormDialog = (params: {
   template: Template | null;
   onClose: () => void;
 }) => {
-  const [values, setValues] = useState<TemplateFormValues>(() =>
-    createInitialValues({ template: params.template }),
-  );
-
   const createTemplate = useCreateTemplate();
   const updateTemplate = useUpdateTemplate();
 
-  const handleFieldChange = useCallback(
-    (
-      event: ChangeEvent<
-        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-      >,
-    ) => {
-      const { name, value } = event.target;
+  const editedTemplate = params.template;
 
-      setValues((previous) => ({ ...previous, [name]: value }));
+  const form = useAppForm({
+    defaultValues: prepareTemplateFormValues({ template: editedTemplate }),
+    validators: {
+      onChange: templateFormValidateFn,
+      onSubmit: editedTemplate
+        ? templateFormMatchValidateFn
+        : templateFormValidateFn,
     },
-    [],
-  );
+    onSubmit: ({ value }) => {
+      const payload = {
+        title: value.title.trim(),
+        lang: value.lang,
+        audience: value.audience,
+        scenario: value.scenario,
+        body: value.body,
+      };
 
-  const handleSubmitClick = useCallback(() => {
-    if (values.title.trim().length === 0 || values.body.trim().length === 0) {
-      toast.error("Название и текст обязательны");
+      if (editedTemplate) {
+        updateTemplate.mutate(
+          { id: editedTemplate.id, data: payload },
+          {
+            onSuccess: () => {
+              toast.success("Шаблон обновлён");
+              params.onClose();
+            },
+            onError: () => {
+              toast.error("Не получилось сохранить шаблон");
+            },
+          },
+        );
 
-      return;
-    }
+        return;
+      }
 
-    const payload = {
-      title: values.title.trim(),
-      lang: values.lang,
-      audience: values.audience,
-      scenario: values.scenario,
-      body: values.body,
-    };
-
-    if (params.template) {
-      updateTemplate.mutate(
-        { id: params.template.id, data: payload },
+      createTemplate.mutate(
+        { data: { ...payload, isBuiltIn: false } },
         {
           onSuccess: () => {
-            toast.success("Шаблон обновлён");
+            toast.success("Шаблон добавлен");
             params.onClose();
+          },
+          onError: () => {
+            toast.error("Не получилось сохранить шаблон");
           },
         },
       );
+    },
+  });
 
-      return;
-    }
-
-    createTemplate.mutate(
-      { data: { ...payload, isBuiltIn: false } },
-      {
-        onSuccess: () => {
-          toast.success("Шаблон добавлен");
-          params.onClose();
-        },
-      },
-    );
-  }, [createTemplate, params, updateTemplate, values]);
+  const { onFormSubmit } = useFormHandlers({ form });
 
   return {
-    handleFieldChange,
-    handleSubmitClick,
+    form,
+    isEditMode: Boolean(editedTemplate),
     isPending: createTemplate.isPending || updateTemplate.isPending,
-    values,
+    onFormSubmit,
   };
 };

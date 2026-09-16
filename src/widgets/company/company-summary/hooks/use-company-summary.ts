@@ -1,6 +1,6 @@
+import { useNavigate } from "@tanstack/react-router";
 import type { ChangeEvent } from "react";
 import { useCallback, useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 import { useGetCompany } from "@/actions/companies/hooks/use-get-company";
@@ -63,7 +63,7 @@ export const useCompanySummary = (params: { companyId: string }) => {
         onSuccess: () => {
           toast.success("Воронка запущена");
           navigate({
-            to: "/companies/$companyId/run",
+            to: "/companies/$companyId/plan",
             params: { companyId: params.companyId },
           });
         },

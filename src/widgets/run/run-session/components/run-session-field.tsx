@@ -35,11 +35,9 @@ export const RunSessionField = ({
 
   if (field.type === "checkbox") {
     return (
-      <Checkbox
-        label={field.label}
-        checked={value === true}
-        onChange={handleCheckboxChange}
-      />
+      <Field label={field.label} hint={field.hint}>
+        <Checkbox checked={value === true} onChange={handleCheckboxChange} />
+      </Field>
     );
   }
 

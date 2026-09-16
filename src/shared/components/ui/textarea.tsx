@@ -1,18 +1,25 @@
+import type { VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 
+import { textareaVariants } from "@/shared/constants/input-variants";
 import { cn } from "@/shared/utils/cn";
 
+export type TextareaProps = ComponentProps<"textarea"> &
+  VariantProps<typeof textareaVariants>;
+
 export const Textarea = ({
-  className,
+  id,
+  name,
+  state,
   rows = 4,
+  className,
   ...props
-}: ComponentProps<"textarea">) => (
+}: TextareaProps) => (
   <textarea
+    id={id ?? name}
+    name={name}
     rows={rows}
-    className={cn(
-      "w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted/70 disabled:opacity-50",
-      className,
-    )}
+    className={cn(textareaVariants({ state }), className)}
     {...props}
   />
 );

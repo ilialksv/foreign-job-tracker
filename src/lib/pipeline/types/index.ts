@@ -19,6 +19,8 @@ export type StepField = {
   type: StepFieldType;
   placeholder?: string;
   hint?: string;
+  /** Поле обязательно при любом исходе шага. */
+  required?: boolean;
 };
 
 export type StepEffect =
@@ -36,6 +38,8 @@ export type StepOption = {
   value: string;
   label: string;
   tone?: StepOptionTone;
+  /** Поля, обязательные именно для этого исхода. */
+  requiredFields?: string[];
   effects: StepEffect[];
 };
 

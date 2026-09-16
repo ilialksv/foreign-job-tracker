@@ -1,6 +1,7 @@
 import { Download } from "lucide-react";
 
 import { useGetSettings } from "@/actions/settings/hooks/use-get-settings";
+import { FieldLayout } from "@/shared/components/layouts/field-layout";
 import { Button } from "@/shared/components/ui/button";
 import {
   Card,
@@ -8,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { Field } from "@/shared/components/ui/field";
 import { Input } from "@/shared/components/ui/input";
 import { Select } from "@/shared/components/ui/select";
 import { COUNTRIES } from "@/shared/constants/countries";
@@ -48,8 +48,8 @@ export const SettingsData = () => {
       </CardHeader>
       <CardContent className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-ink">Экспорт</span>
-          <p className="text-sm text-muted">
+          <span className="text-ink text-sm font-medium">Экспорт</span>
+          <p className="text-muted text-sm">
             Один JSON со всеми компаниями, контактами, вакансиями, задачами,
             ответами на шагах, заметками и шаблонами.
           </p>
@@ -64,57 +64,57 @@ export const SettingsData = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-line pt-4">
-          <span className="text-sm font-medium text-ink">Импорт JSON</span>
+        <div className="border-line flex flex-col gap-2 border-t pt-4">
+          <span className="text-ink text-sm font-medium">Импорт JSON</span>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Стратегия">
+            <FieldLayout labelText="Стратегия">
               <Select
                 value={strategy}
                 options={STRATEGY_OPTIONS}
                 onChange={handleStrategyChange}
               />
-            </Field>
-            <Field label="Файл">
+            </FieldLayout>
+            <FieldLayout labelText="Файл">
               <Input
                 type="file"
                 accept="application/json"
                 className="h-10 py-2"
                 onChange={handleJsonFileChange}
               />
-            </Field>
+            </FieldLayout>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-line pt-4">
-          <span className="text-sm font-medium text-ink">
+        <div className="border-line flex flex-col gap-2 border-t pt-4">
+          <span className="text-ink text-sm font-medium">
             Импорт компаний из CSV
           </span>
-          <p className="text-sm text-muted">
+          <p className="text-muted text-sm">
             Колонки: Компания, Очередь, Уровень, Информация, Статус, Дата
             контакта, Следующий контакт, Нанимающий(е), Инженер(ы).
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Страна для импортируемых">
+            <FieldLayout labelText="Страна для импортируемых">
               <Select
                 value={countryCode}
                 options={COUNTRY_OPTIONS}
                 onChange={handleCountryChange}
               />
-            </Field>
-            <Field label="Файл">
+            </FieldLayout>
+            <FieldLayout labelText="Файл">
               <Input
                 type="file"
                 accept=".csv,text/csv"
                 className="h-10 py-2"
                 onChange={handleCsvFileChange}
               />
-            </Field>
+            </FieldLayout>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-line pt-4">
-          <span className="text-sm font-medium text-ink">Очистка</span>
-          <p className="text-sm text-muted">
+        <div className="border-line flex flex-col gap-2 border-t pt-4">
+          <span className="text-ink text-sm font-medium">Очистка</span>
+          <p className="text-muted text-sm">
             Удаляет компании, контакты, вакансии, задачи, заметки и историю.
             Шаблоны и настройки остаются.
           </p>

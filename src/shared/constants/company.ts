@@ -6,12 +6,7 @@ import type {
 } from "@/shared/types/entities";
 
 export type BadgeTone =
-  | "neutral"
-  | "accent"
-  | "danger"
-  | "warn"
-  | "ok"
-  | "outline";
+  "neutral" | "accent" | "danger" | "warn" | "ok" | "outline";
 
 export const COMPANY_STATUS_LABELS: Record<CompanyStatus, string> = {
   queued: "В очереди",

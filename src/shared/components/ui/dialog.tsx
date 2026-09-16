@@ -28,29 +28,29 @@ export const DialogContent = ({
     <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/40" />
     <DialogPrimitive.Content
       className={cn(
-        "fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-line bg-surface",
+        "border-line bg-surface fixed top-1/2 left-1/2 z-50 flex max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border",
         className,
       )}
       {...props}
     >
-      <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-3">
+      <div className="border-line flex items-start justify-between gap-3 border-b px-4 py-3">
         <div className="flex flex-col gap-1">
-          <DialogPrimitive.Title className="text-sm font-semibold text-ink">
+          <DialogPrimitive.Title className="text-ink text-sm font-semibold">
             {title}
           </DialogPrimitive.Title>
           {description ? (
-            <DialogPrimitive.Description className="text-xs text-muted">
+            <DialogPrimitive.Description className="text-muted text-xs">
               {description}
             </DialogPrimitive.Description>
           ) : null}
         </div>
-        <DialogPrimitive.Close className="cursor-pointer text-muted hover:text-ink">
+        <DialogPrimitive.Close className="text-muted hover:text-ink cursor-pointer">
           <X className="size-4" />
         </DialogPrimitive.Close>
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-4">{children}</div>
       {footer ? (
-        <div className="flex justify-end gap-2 border-t border-line px-4 py-3">
+        <div className="border-line flex justify-end gap-2 border-t px-4 py-3">
           {footer}
         </div>
       ) : null}

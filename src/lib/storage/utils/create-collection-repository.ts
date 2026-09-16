@@ -1,9 +1,9 @@
 import type { BaseEntity } from "@/shared/types/entities";
 import { nowIso } from "@/shared/utils/dates";
+import { generateId } from "@/shared/utils/generate-id";
 
 import { localStorageDriver } from "../drivers/local-storage-driver";
 import type { CollectionRepository, CreateInput, UpdateInput } from "../types";
-import { generateId } from "@/shared/utils/generate-id";
 
 export const createCollectionRepository = <T extends BaseEntity>(params: {
   key: string;

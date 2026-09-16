@@ -3,3 +3,6 @@ dist
 .DS_Store
 *.local
 .env
+
+# файл импорта компаний, не часть кода
+/foreign-job-companies-import.json

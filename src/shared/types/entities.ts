@@ -20,12 +20,7 @@ export type CompanyDepth = "quick" | "standard" | "deep";
 export type EngineeringSize = "lt50" | "from50to200" | "gt200" | "unknown";
 
 export type AtsKind =
-  | "greenhouse"
-  | "workable"
-  | "lever"
-  | "ashby"
-  | "teamtailor"
-  | "other";
+  "greenhouse" | "workable" | "lever" | "ashby" | "teamtailor" | "other";
 
 export type Company = BaseEntity & {
   name: string;
@@ -51,11 +46,7 @@ export type Company = BaseEntity & {
 export type ContactRole = "engineer" | "hiring" | "recruiter" | "other";
 
 export type ContactStatus =
-  | "none"
-  | "invite_sent"
-  | "connected"
-  | "replied"
-  | "no_reply";
+  "none" | "invite_sent" | "connected" | "replied" | "no_reply";
 
 export type ContactLanguage = "ru" | "en";
 

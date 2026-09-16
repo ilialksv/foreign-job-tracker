@@ -26,7 +26,7 @@ const STATUS_BY_LABEL: Record<string, CompanyStatus> = {
   "В ожидании": "queued",
   "Запрос на контакт": "active",
   "Первый контакт": "active",
-  Исключено: "excluded",
+  "Исключено": "excluded",
 };
 
 const parseRussianDate = (params: { value: string }) => {

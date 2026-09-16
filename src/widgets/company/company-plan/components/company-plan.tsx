@@ -1,5 +1,4 @@
-import { Link } from "@tanstack/react-router";
-import { Play, Plus } from "lucide-react";
+import { Play } from "lucide-react";
 
 import { ItemsList } from "@/shared/components/common/items-list";
 import { Button } from "@/shared/components/ui/button";
@@ -9,14 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { Input } from "@/shared/components/ui/input";
 import { Plug } from "@/shared/components/ui/plug";
-import { Select } from "@/shared/components/ui/select";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { buttonVariants } from "@/shared/constants/button-variants";
 
 import { useCompanyPlan } from "../hooks/use-company-plan";
 import { CompanyPlanTask } from "./company-plan-task";
+import { CompanyStepForm } from "./company-step-form";
+import { CompanyTaskForm } from "./company-task-form";
 
 export type CompanyPlanProps = {
   companyId: string;
@@ -25,19 +23,12 @@ export type CompanyPlanProps = {
 export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
   const {
     blockedTaskIds,
-    handleAddCustomTaskClick,
-    handleAddStepClick,
     handleRemoveClick,
     handleSkipClick,
     handleStartPipelineClick,
-    handleStepKeyChange,
-    handleValuesChange,
     hasPipeline,
     isLoading,
-    onDemandStepOptions,
-    stepKey,
     tasks,
-    values,
   } = useCompanyPlan({ companyId });
 
   if (isLoading) {
@@ -50,16 +41,7 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
         <CardHeader>
           <CardTitle>Этапы и задачи</CardTitle>
           <div className="flex gap-2">
-            {hasPipeline ? (
-              <Link
-                to="/companies/$companyId/run"
-                params={{ companyId }}
-                className={buttonVariants({ variant: "primary", size: "sm" })}
-              >
-                <Play className="size-4" />
-                Режим выполнения
-              </Link>
-            ) : (
+            {hasPipeline ? null : (
               <Button
                 size="sm"
                 variant="primary"
@@ -84,6 +66,7 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
               <CompanyPlanTask
                 key={task.id}
                 task={task}
+                companyId={companyId}
                 blocked={blockedTaskIds.has(task.id)}
                 onSkip={handleSkipClick}
                 onRemove={handleRemoveClick}
@@ -98,45 +81,8 @@ export const CompanyPlan = ({ companyId }: CompanyPlanProps) => {
           <CardTitle>Добавить</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium tracking-wide text-muted uppercase">
-              Своя задача
-            </span>
-            <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto]">
-              <Input
-                name="title"
-                value={values.title}
-                onChange={handleValuesChange}
-                placeholder="Например: проверить careers через неделю"
-              />
-              <Input
-                name="dueAt"
-                type="date"
-                value={values.dueAt}
-                onChange={handleValuesChange}
-              />
-              <Button icon={<Plus />} onClick={handleAddCustomTaskClick}>
-                Добавить
-              </Button>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium tracking-wide text-muted uppercase">
-              Шаг воронки
-            </span>
-            <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
-              <Select
-                value={stepKey}
-                options={onDemandStepOptions}
-                placeholder="Выбрать шаг"
-                onChange={handleStepKeyChange}
-              />
-              <Button icon={<Plus />} onClick={handleAddStepClick}>
-                Добавить шаг
-              </Button>
-            </div>
-          </div>
+          <CompanyTaskForm companyId={companyId} />
+          <CompanyStepForm companyId={companyId} />
         </CardContent>
       </Card>
     </div>

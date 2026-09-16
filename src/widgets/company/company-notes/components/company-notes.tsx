@@ -1,4 +1,3 @@
-import { Button } from "@/shared/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,9 +5,9 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { Textarea } from "@/shared/components/ui/textarea";
 
 import { useCompanyNotes } from "../hooks/use-company-notes";
+import { CompanyNoteForm } from "./company-note-form";
 import { CompanyNoteRow } from "./company-note-row";
 
 export type CompanyNotesProps = {
@@ -16,21 +15,15 @@ export type CompanyNotesProps = {
 };
 
 export const CompanyNotes = ({ companyId }: CompanyNotesProps) => {
-  const {
-    body,
-    handleAddClick,
-    handleBodyChange,
-    handleRemoveClick,
-    isLoading,
-    isPending,
-    notes,
-  } = useCompanyNotes({ companyId });
+  const { handleRemoveClick, isLoading, notes } = useCompanyNotes({
+    companyId,
+  });
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Заметки</CardTitle>
-        <span className="text-xs text-muted">{notes.length}</span>
+        <span className="text-muted text-xs">{notes.length}</span>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {isLoading ? (
@@ -47,19 +40,7 @@ export const CompanyNotes = ({ companyId }: CompanyNotesProps) => {
           </div>
         )}
 
-        <div className="flex flex-col gap-2 border-t border-line pt-3">
-          <Textarea
-            value={body}
-            rows={3}
-            onChange={handleBodyChange}
-            placeholder="Что важно помнить про эту компанию"
-          />
-          <div>
-            <Button size="sm" disabled={isPending} onClick={handleAddClick}>
-              Сохранить заметку
-            </Button>
-          </div>
-        </div>
+        <CompanyNoteForm companyId={companyId} />
       </CardContent>
     </Card>
   );

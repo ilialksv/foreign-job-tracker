@@ -31,7 +31,7 @@ export const CompaniesList = () => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="text-sm text-muted">
+        <span className="text-muted text-sm">
           Показано {companies.length} из {totalCount}
         </span>
         <Button variant="primary" icon={<Plus />} onClick={handleCreateClick}>

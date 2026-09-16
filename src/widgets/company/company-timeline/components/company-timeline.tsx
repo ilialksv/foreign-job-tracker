@@ -20,13 +20,13 @@ export const CompanyTimeline = ({ companyId }: CompanyTimelineProps) => {
     <Card>
       <CardHeader>
         <CardTitle>История</CardTitle>
-        <span className="text-xs text-muted">{events.length}</span>
+        <span className="text-muted text-xs">{events.length}</span>
       </CardHeader>
       <CardContent>
         {isLoading ? (
           <CompanyTimelineSkeleton />
         ) : events.length === 0 ? (
-          <p className="text-sm text-muted">
+          <p className="text-muted text-sm">
             Здесь появятся закрытые шаги и отправленные сообщения.
           </p>
         ) : (
@@ -34,13 +34,13 @@ export const CompanyTimeline = ({ companyId }: CompanyTimelineProps) => {
             {events.map((event) => (
               <li
                 key={event.id}
-                className="flex flex-col gap-0.5 border-b border-line py-2 last:border-b-0"
+                className="border-line flex flex-col gap-0.5 border-b py-2 last:border-b-0"
               >
-                <span className="text-sm text-ink">{event.title}</span>
+                <span className="text-ink text-sm">{event.title}</span>
                 {event.details ? (
-                  <span className="text-sm text-muted">{event.details}</span>
+                  <span className="text-muted text-sm">{event.details}</span>
                 ) : null}
-                <span className="text-xs text-muted">
+                <span className="text-muted text-xs">
                   {formatDateTime(event.createdAt)}
                 </span>
               </li>

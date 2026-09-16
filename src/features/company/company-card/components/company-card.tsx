@@ -17,16 +17,16 @@ export const CompanyCard = ({ company, openTasksCount }: CompanyCardProps) => (
   <Link
     to="/companies/$companyId"
     params={{ companyId: company.id }}
-    className="flex flex-col gap-2 rounded-xl border border-line bg-surface px-4 py-3 transition-colors hover:border-accent"
+    className="border-line bg-surface hover:border-accent flex flex-col gap-2 rounded-xl border px-4 py-3 transition-colors"
   >
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <span className="text-sm font-semibold text-ink">{company.name}</span>
+      <span className="text-ink text-sm font-semibold">{company.name}</span>
       <CompanyStatusBadge status={company.status} />
     </div>
     {company.info ? (
-      <p className="line-clamp-2 text-sm text-muted">{company.info}</p>
+      <p className="text-muted line-clamp-2 text-sm">{company.info}</p>
     ) : null}
-    <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+    <div className="text-muted flex flex-wrap items-center gap-2 text-xs">
       <Badge tone="outline">{getCountryLabel(company.countryCode)}</Badge>
       <Badge tone="outline">{COMPANY_DEPTH_LABELS[company.depth]}</Badge>
       {company.queueTier ? (
@@ -43,7 +43,7 @@ export const CompanyCard = ({ company, openTasksCount }: CompanyCardProps) => (
 );
 
 export const CompanyCardSkeleton = () => (
-  <div className="flex flex-col gap-2 rounded-xl border border-line bg-surface px-4 py-3">
+  <div className="border-line bg-surface flex flex-col gap-2 rounded-xl border px-4 py-3">
     <Skeleton className="h-4 w-40" />
     <Skeleton className="h-3 w-full" />
     <Skeleton className="h-3 w-24" />

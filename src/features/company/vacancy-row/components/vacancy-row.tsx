@@ -21,15 +21,15 @@ export const VacancyRow = ({ vacancy, onRemove }: VacancyRowProps) => {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line py-2 last:border-b-0">
+    <div className="border-line flex flex-wrap items-center justify-between gap-3 border-b py-2 last:border-b-0">
       <div className="flex min-w-0 flex-col gap-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium text-ink">{vacancy.title}</span>
+          <span className="text-ink text-sm font-medium">{vacancy.title}</span>
           <Badge tone={VACANCY_STATUS_TONES[vacancy.status]}>
             {VACANCY_STATUS_LABELS[vacancy.status]}
           </Badge>
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+        <div className="text-muted flex flex-wrap items-center gap-2 text-xs">
           <span>{VACANCY_SOURCE_LABELS[vacancy.source]}</span>
           <span>найдена {formatDate(vacancy.foundAt)}</span>
           {vacancy.appliedAt ? (
@@ -43,7 +43,7 @@ export const VacancyRow = ({ vacancy, onRemove }: VacancyRowProps) => {
             href={vacancy.url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex size-9 items-center justify-center rounded-lg text-muted hover:text-ink"
+            className="text-muted hover:text-ink inline-flex size-9 items-center justify-center rounded-lg"
           >
             <ExternalLink className="size-4" />
           </a>

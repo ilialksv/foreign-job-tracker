@@ -12,9 +12,9 @@ const ACTIVE_PROPS = { className: "text-accent" };
 
 export const AppNavigation = () => (
   <>
-    <header className="sticky top-0 z-30 hidden border-b border-line bg-surface md:block">
+    <header className="border-line bg-surface sticky top-0 z-30 hidden border-b md:block">
       <nav className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
-        <span className="text-sm font-semibold text-ink">Foreign Job</span>
+        <span className="text-ink text-sm font-semibold">Foreign Job</span>
         <div className="flex items-center gap-5">
           {ITEMS.map((item) => (
             <Link
@@ -22,7 +22,7 @@ export const AppNavigation = () => (
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
               activeProps={ACTIVE_PROPS}
-              className="flex items-center gap-2 text-sm text-muted hover:text-ink"
+              className="text-muted hover:text-ink flex items-center gap-2 text-sm"
             >
               <item.Icon className="size-4" />
               {item.label}
@@ -32,14 +32,14 @@ export const AppNavigation = () => (
       </nav>
     </header>
 
-    <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-line bg-surface pb-[env(safe-area-inset-bottom,0px)] md:hidden">
+    <nav className="border-line bg-surface fixed inset-x-0 bottom-0 z-30 flex border-t pb-[env(safe-area-inset-bottom,0px)] md:hidden">
       {ITEMS.map((item) => (
         <Link
           key={item.to}
           to={item.to}
           activeOptions={{ exact: item.to === "/" }}
           activeProps={ACTIVE_PROPS}
-          className="flex flex-1 flex-col items-center gap-1 py-2 text-xs text-muted"
+          className="text-muted flex flex-1 flex-col items-center gap-1 py-2 text-xs"
         >
           <item.Icon className="size-4" />
           {item.label}

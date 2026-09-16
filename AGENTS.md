@@ -16,16 +16,16 @@
 
 ## Слои
 
-| Путь | Назначение |
-| --- | --- |
-| `src/routes` | Объявления маршрутов, параметры, guard-логика |
-| `src/entrypoints` | Композиция страниц |
-| `src/widgets/<domain>` | Сложные доменные блоки: UI + поведение |
-| `src/features/<domain>` | Переиспользуемый презентационный доменный UI |
-| `src/actions/<domain>` | Хуки поверх репозиториев: queries и mutations |
-| `src/shared` | Кросс-доменные UI-примитивы, хуки, утилиты, константы, типы |
-| `src/lib` | Инфраструктура: storage, pipeline, tanstack-*, zod |
-| `src/codegen` | Сгенерированные файлы, не редактировать руками |
+| Путь                    | Назначение                                                  |
+| ----------------------- | ----------------------------------------------------------- |
+| `src/routes`            | Объявления маршрутов, параметры, guard-логика               |
+| `src/entrypoints`       | Композиция страниц                                          |
+| `src/widgets/<domain>`  | Сложные доменные блоки: UI + поведение                      |
+| `src/features/<domain>` | Переиспользуемый презентационный доменный UI                |
+| `src/actions/<domain>`  | Хуки поверх репозиториев: queries и mutations               |
+| `src/shared`            | Кросс-доменные UI-примитивы, хуки, утилиты, константы, типы |
+| `src/lib`               | Инфраструктура: storage, pipeline, tanstack-*, zod          |
+| `src/codegen`           | Сгенерированные файлы, не редактировать руками              |
 
 Направление зависимостей:
 
@@ -74,10 +74,56 @@ routes -> entrypoints -> widgets -> features/actions -> shared/lib
 
 ## Формы
 
-Формы v1 — локальное состояние в хуках виджета. TanStack Form не подключён.
-Если форма выросла (много полей, валидация, submit-guard), подключать
-`useAppForm` по образцу `genario-frontend`, а не наращивать локальное
-состояние.
+Все формы — на TanStack Form через `useAppForm` из `@/lib/tanstack-form`.
+Локальное состояние под значения полей не заводить.
+
+Структура формы внутри виджета:
+
+```text
+schemas/<name>-form-schema.ts     Zod-схема + тип значений + дефолты
+utils/<name>-form-helpers.ts      валидаторы из схемы
+utils/prepare-<name>-form-values.ts   сущность -> значения формы
+utils/prepare-<name>-submit-data.ts   значения формы -> данные репозитория
+hooks/use-<name>-form.ts          useAppForm, мутации, onSubmit
+components/<name>-form.tsx        <form> + кнопки
+components/<name>-form-fields.tsx withForm, поля (от трёх полей и больше)
+```
+
+Правила:
+
+- Валидаторы собираются из Zod-схемы через `createFormValidateFn`; для форм
+  редактирования на `onSubmit` идёт `createFormMatchValidateFn`, чтобы нельзя
+  было сохранить неизменённые значения.
+- Общие кирпичики схем — в `@/lib/zod/schemas/common`
+  (`requiredTextSchema`, `optionalUrlSchema`, `numericTextSchema`,
+  `requiredEnumSchema`, `optionalDateSchema`). Не дублировать тексты ошибок.
+- Поля рендерятся только компонентами поля: `field.InputField`,
+  `field.TextareaField`, `field.SelectField`, `field.CheckboxField`. Ошибку
+  показывает `FieldLayout` внутри них, руками ошибки не выводить.
+- Кнопка отправки — `form.SubmitButton` внутри `form.AppForm`, чтобы работал
+  `canSubmit`. Для формы в диалоге кнопка живёт в футере и получает
+  `form={formId}`.
+- После успешного обновления вызывать `formApi.reset(value)`, после создания —
+  `formApi.reset()`.
+- У `<form>` всегда `noValidate`: валидация наша, а не браузерная.
+- Форма шага воронки собирается из определения шага: типы полей берутся из
+  `StepField.type`, обязательность — из `StepField.required` и
+  `StepOption.requiredFields`. Добавлять новое поле шага нужно в
+  `lib/pipeline/constants/uae-flow.ts`, форма подхватит его сама.
+
+## Режим выполнения
+
+- Доступность шага считается, а не хранится: `getTaskMode` возвращает
+  `active`, `completed` или `blocked` на основе статуса и незакрытых
+  зависимостей. Заблокированный шаг нельзя выбрать в навигаторе.
+- Закрытый шаг открывается на правку ответов (`useUpdateTaskAnswers`) без
+  повторного применения эффектов. Чтобы переиграть исход, шаг возвращается в
+  работу через `useReopenTask`; откат эффектов прошлого исхода не делается.
+- У шага компании свой маршрут `/companies/$companyId/plan/$taskId`: список
+  этапов и страница этапа, отдельной страницы «выполнение» нет.
+- Элемент списка открывается кликом по самой строке (`TaskRow` принимает
+  `renderContent` и оборачивает содержимое ссылкой). Отдельных кнопок
+  «Открыть» не заводить; кнопками остаются только действия над элементом.
 
 ## Команды
 

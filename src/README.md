@@ -19,7 +19,8 @@ src/widgets/<domain>/<slice>/
   components/<slice>.tsx        главный компонент + скелетон
   components/<child>.tsx        значимые дочерние компоненты
   hooks/use-<slice>.ts          вся логика
-  utils/                        чистые помощники
+  schemas/                      Zod-схемы форм и типы значений
+  utils/                        чистые помощники и валидаторы
 ```
 
 ## Ключевые места
@@ -27,4 +28,7 @@ src/widgets/<domain>/<slice>/
 - `src/lib/storage` — весь LocalStorage: драйвер, репозитории, снапшот.
 - `src/lib/pipeline` — определения шагов воронки и чистый движок.
 - `src/actions/pipeline` — запись результатов шага и инвалидация кэша.
+- `src/lib/tanstack-form` — слой форм: `useAppForm`, `withForm`, компоненты
+  полей, валидаторы из Zod-схем.
+- `src/lib/zod/schemas/common.ts` — переиспользуемые кирпичики валидации.
 - `src/shared/types/entities.ts` — все доменные сущности.

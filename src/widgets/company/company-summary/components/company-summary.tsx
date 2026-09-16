@@ -55,7 +55,7 @@ export const CompanySummary = ({ companyId }: CompanySummaryProps) => {
     return (
       <Card>
         <CardContent>
-          <p className="text-sm text-muted">Компания не найдена.</p>
+          <p className="text-muted text-sm">Компания не найдена.</p>
         </CardContent>
       </Card>
     );
@@ -105,7 +105,7 @@ export const CompanySummary = ({ companyId }: CompanySummaryProps) => {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         {company.info ? (
-          <p className="text-sm whitespace-pre-wrap text-muted">
+          <p className="text-muted text-sm whitespace-pre-wrap">
             {company.info}
           </p>
         ) : null}
@@ -144,7 +144,7 @@ export const CompanySummary = ({ companyId }: CompanySummaryProps) => {
         </div>
 
         {company.excludeReason ? (
-          <p className="text-sm text-danger">
+          <p className="text-danger text-sm">
             Стоп-сигнал: {company.excludeReason}
           </p>
         ) : null}
@@ -152,12 +152,12 @@ export const CompanySummary = ({ companyId }: CompanySummaryProps) => {
         <div className="flex flex-wrap gap-2">
           {hasPipeline ? (
             <Link
-              to="/companies/$companyId/run"
+              to="/companies/$companyId/plan"
               params={{ companyId }}
               className={buttonVariants({ variant: "primary" })}
             >
               <Play className="size-4" />
-              Продолжить по шагам
+              Перейти к этапам
             </Link>
           ) : (
             <Button

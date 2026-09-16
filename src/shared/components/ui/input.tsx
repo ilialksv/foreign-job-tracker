@@ -1,13 +1,24 @@
+import type { VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 
+import { inputVariants } from "@/shared/constants/input-variants";
 import { cn } from "@/shared/utils/cn";
 
-export const Input = ({ className, ...props }: ComponentProps<"input">) => (
+export type InputProps = Omit<ComponentProps<"input">, "size"> &
+  VariantProps<typeof inputVariants>;
+
+export const Input = ({
+  id,
+  name,
+  size,
+  state,
+  className,
+  ...props
+}: InputProps) => (
   <input
-    className={cn(
-      "h-10 w-full rounded-lg border border-line bg-surface px-3 text-sm text-ink placeholder:text-muted/70 disabled:opacity-50",
-      className,
-    )}
+    id={id ?? name}
+    name={name}
+    className={cn(inputVariants({ size, state }), className)}
     {...props}
   />
 );

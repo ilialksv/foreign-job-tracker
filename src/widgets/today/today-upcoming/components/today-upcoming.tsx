@@ -1,4 +1,3 @@
-import { TaskRow } from "@/features/tasks/task-row/components/task-row";
 import { ItemsList } from "@/shared/components/common/items-list";
 import {
   Card,
@@ -10,6 +9,7 @@ import { Plug } from "@/shared/components/ui/plug";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 import { useTodayUpcoming } from "../hooks/use-today-upcoming";
+import { TodayUpcomingTask } from "./today-upcoming-task";
 
 export const TodayUpcoming = () => {
   const { companyNameById, groups, isLoading } = useTodayUpcoming();
@@ -33,11 +33,11 @@ export const TodayUpcoming = () => {
         <Card key={group.key}>
           <CardHeader>
             <CardTitle>{group.title}</CardTitle>
-            <span className="text-xs text-muted">{group.tasks.length}</span>
+            <span className="text-muted text-xs">{group.tasks.length}</span>
           </CardHeader>
           <CardContent className="py-0">
             {group.tasks.map((task) => (
-              <TaskRow
+              <TodayUpcomingTask
                 key={task.id}
                 task={task}
                 companyName={

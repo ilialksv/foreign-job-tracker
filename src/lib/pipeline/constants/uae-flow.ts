@@ -25,6 +25,7 @@ export const FLOW_STEPS: StepDefinition[] = [
       },
       {
         value: "stopped",
+        requiredFields: ["stopSignal"],
         label: "Есть стоп-сигнал",
         tone: "danger",
         effects: [{ type: "close_company", status: "excluded" }],
@@ -72,6 +73,7 @@ export const FLOW_STEPS: StepDefinition[] = [
         key: "productDetail",
         label: "Деталь про продукт",
         type: "textarea",
+        required: true,
         placeholder:
           "Конкретная фича, редизайн, доклад их инженера, их опенсорс",
         hint: "Эта строка подставится в шаблоны как {{productDetail}}",
@@ -138,6 +140,7 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "applied",
+        requiredFields: ["vacancyTitle"],
         label: "Откликнулся",
         tone: "primary",
         effects: [{ type: "mark_vacancy_applied" }],
@@ -160,6 +163,7 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "sent",
+        requiredFields: ["profileUrl", "noteText"],
         label: "Отправил",
         tone: "primary",
         effects: [
@@ -189,6 +193,7 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "sent",
+        requiredFields: ["profileUrl", "noteText"],
         label: "Отправил",
         tone: "primary",
         effects: [
@@ -244,6 +249,7 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "sent",
+        requiredFields: ["messageText"],
         label: "Отправил",
         tone: "primary",
         effects: [{ type: "schedule_step", stepKey: "follow_up_2", inDays: 6 }],
@@ -291,7 +297,13 @@ export const FLOW_STEPS: StepDefinition[] = [
       { key: "findings", label: "Находки", type: "textarea" },
     ],
     options: [
-      { value: "sent", label: "Отправил", tone: "primary", effects: [] },
+      {
+        value: "sent",
+        label: "Отправил",
+        tone: "primary",
+        requiredFields: ["linkUrl", "findings"],
+        effects: [],
+      },
     ],
   },
   {
@@ -323,6 +335,12 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "ready",
+        requiredFields: [
+          "callDate",
+          "answersReady",
+          "salaryReady",
+          "visaReady",
+        ],
         label: "Готов к звонку",
         tone: "primary",
         effects: [
@@ -343,6 +361,7 @@ export const FLOW_STEPS: StepDefinition[] = [
     options: [
       {
         value: "sent",
+        requiredFields: ["messageText"],
         label: "Отправил",
         tone: "primary",
         effects: [{ type: "set_company_status", status: "interviewing" }],
@@ -382,3 +401,7 @@ export const getStepDefinition = (params: { stepKey: string | null }) =>
 
 export const getInitialSteps = () =>
   FLOW_STEPS.filter((step) => step.creation === "initial");
+
+export const ON_DEMAND_STEPS = FLOW_STEPS.filter(
+  (step) => step.creation === "on_demand",
+);

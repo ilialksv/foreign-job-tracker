@@ -12,13 +12,13 @@ export type PlugProps = {
 export const Plug = ({ title, description, action, className }: PlugProps) => (
   <div
     className={cn(
-      "flex flex-col items-center gap-2 rounded-xl border border-dashed border-line px-4 py-8 text-center",
+      "border-line flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center",
       className,
     )}
   >
-    <p className="text-sm font-medium text-ink">{title}</p>
+    <p className="text-ink text-sm font-medium">{title}</p>
     {description ? (
-      <p className="max-w-md text-sm text-muted">{description}</p>
+      <p className="text-muted max-w-md text-sm">{description}</p>
     ) : null}
     {action}
   </div>

@@ -1,5 +1,5 @@
 import type { StepField } from "@/lib/pipeline";
-import type { TaskAnswerValue, TaskAnswers } from "@/shared/types/entities";
+import type { TaskAnswers, TaskAnswerValue } from "@/shared/types/entities";
 
 import { RunSessionField } from "./run-session-field";
 

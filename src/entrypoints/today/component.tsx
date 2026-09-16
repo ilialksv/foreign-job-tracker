@@ -23,12 +23,12 @@ export const TodayPage = () => (
     <TodayStats />
 
     <section className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-ink">Следующее действие</h2>
+      <h2 className="text-ink text-sm font-semibold">Следующее действие</h2>
       <RunSession />
     </section>
 
     <section className="flex flex-col gap-3">
-      <h2 className="text-sm font-semibold text-ink">Ближайшее</h2>
+      <h2 className="text-ink text-sm font-semibold">Ближайшее</h2>
       <TodayUpcoming />
     </section>
   </div>

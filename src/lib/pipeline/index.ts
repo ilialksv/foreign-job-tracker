@@ -2,6 +2,7 @@ export {
   FLOW_STEPS,
   getInitialSteps,
   getStepDefinition,
+  ON_DEMAND_STEPS,
 } from "./constants/uae-flow";
 export type {
   CompanyPatch,

@@ -1,5 +1,7 @@
+import type { VariantProps } from "class-variance-authority";
 import type { ComponentProps } from "react";
 
+import { inputVariants } from "@/shared/constants/input-variants";
 import { cn } from "@/shared/utils/cn";
 
 export type SelectOption = {
@@ -7,20 +9,28 @@ export type SelectOption = {
   label: string;
 };
 
-export type SelectProps = ComponentProps<"select"> & {
-  options: SelectOption[];
-  placeholder?: string;
-};
+export type SelectProps = Omit<ComponentProps<"select">, "size"> &
+  VariantProps<typeof inputVariants> & {
+    options: SelectOption[];
+    placeholder?: string;
+  };
 
 export const Select = ({
+  id,
+  name,
+  size,
+  state,
   options,
   placeholder,
   className,
   ...props
 }: SelectProps) => (
   <select
+    id={id ?? name}
+    name={name}
     className={cn(
-      "h-10 w-full cursor-pointer appearance-none rounded-lg border border-line bg-surface px-3 text-sm text-ink disabled:opacity-50",
+      inputVariants({ size, state }),
+      "cursor-pointer appearance-none",
       className,
     )}
     {...props}

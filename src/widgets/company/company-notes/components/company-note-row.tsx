@@ -16,10 +16,10 @@ export const CompanyNoteRow = ({ note, onRemove }: CompanyNoteRowProps) => {
   }, [note.id, onRemove]);
 
   return (
-    <div className="flex items-start justify-between gap-3 border-b border-line py-2 last:border-b-0">
+    <div className="border-line flex items-start justify-between gap-3 border-b py-2 last:border-b-0">
       <div className="flex min-w-0 flex-col gap-1">
-        <p className="text-sm whitespace-pre-wrap text-ink">{note.body}</p>
-        <span className="text-xs text-muted">
+        <p className="text-ink text-sm whitespace-pre-wrap">{note.body}</p>
+        <span className="text-muted text-xs">
           {formatDateTime(note.createdAt)}
         </span>
       </div>

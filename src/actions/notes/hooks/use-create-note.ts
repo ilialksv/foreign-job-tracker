@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { CreateInput } from "@/lib/storage/types";
 import { notesRepository } from "@/lib/storage/repositories";
+import type { CreateInput } from "@/lib/storage/types";
 import type { Note } from "@/shared/types/entities";
 
 import { notesQueryKeys } from "../constants/query-keys";

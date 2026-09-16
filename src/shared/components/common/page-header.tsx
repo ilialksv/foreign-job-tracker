@@ -13,8 +13,8 @@ export const PageHeader = ({
 }: PageHeaderProps) => (
   <header className="flex flex-wrap items-end justify-between gap-3">
     <div className="flex flex-col gap-1">
-      <h1 className="text-xl font-semibold tracking-tight text-ink">{title}</h1>
-      {description ? <p className="text-sm text-muted">{description}</p> : null}
+      <h1 className="text-ink text-xl font-semibold tracking-tight">{title}</h1>
+      {description ? <p className="text-muted text-sm">{description}</p> : null}
     </div>
     {actions ? <div className="flex gap-2">{actions}</div> : null}
   </header>

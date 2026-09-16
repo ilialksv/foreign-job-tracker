@@ -1,92 +1,45 @@
-import type { ChangeEvent } from "react";
-import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { useUpdateSettings } from "@/actions/settings/hooks/use-update-settings";
+import { useAppForm } from "@/lib/tanstack-form";
+import { useFormHandlers } from "@/lib/tanstack-form/hooks/use-form-handlers";
 import type { Settings } from "@/shared/types/entities";
 
-export type SettingsProfileValues = {
-  fullName: string;
-  linkedinUrl: string;
-  portfolioUrl: string;
-  cvUrl: string;
-  companiesPerWeek: string;
-  firstDays: string;
-  secondDays: string;
-  reviveWeeks: string;
-  defaultCountryCode: string;
-};
-
-const toValues = (settings: Settings): SettingsProfileValues => ({
-  fullName: settings.profile.fullName,
-  linkedinUrl: settings.profile.linkedinUrl,
-  portfolioUrl: settings.profile.portfolioUrl,
-  cvUrl: settings.profile.cvUrl,
-  companiesPerWeek: String(settings.goals.companiesPerWeek),
-  firstDays: String(settings.followUp.firstDays),
-  secondDays: String(settings.followUp.secondDays),
-  reviveWeeks: String(settings.followUp.reviveWeeks),
-  defaultCountryCode: settings.defaultCountryCode,
-});
-
-const toNumber = (params: { value: string; fallback: number }) => {
-  const parsed = Number(params.value);
-
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : params.fallback;
-};
+import { prepareSettingsProfileFormValues } from "../utils/prepare-settings-profile-form-values";
+import { prepareSettingsProfileSubmitData } from "../utils/prepare-settings-profile-submit-data";
+import {
+  settingsProfileFormMatchValidateFn,
+  settingsProfileFormValidateFn,
+} from "../utils/settings-profile-form-helpers";
 
 export const useSettingsProfileForm = (params: { settings: Settings }) => {
-  const [values, setValues] = useState<SettingsProfileValues>(() =>
-    toValues(params.settings),
-  );
-
   const updateSettings = useUpdateSettings();
 
-  const handleFieldChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = event.target;
-
-      setValues((previous) => ({ ...previous, [name]: value }));
+  const form = useAppForm({
+    defaultValues: prepareSettingsProfileFormValues({
+      settings: params.settings,
+    }),
+    validators: {
+      onChange: settingsProfileFormValidateFn,
+      onSubmit: settingsProfileFormMatchValidateFn,
     },
-    [],
-  );
-
-  const handleSubmitClick = useCallback(() => {
-    updateSettings.mutate(
-      {
-        data: {
-          profile: {
-            fullName: values.fullName.trim(),
-            linkedinUrl: values.linkedinUrl.trim(),
-            portfolioUrl: values.portfolioUrl.trim(),
-            cvUrl: values.cvUrl.trim(),
+    onSubmit: ({ value, formApi }) => {
+      updateSettings.mutate(
+        { data: prepareSettingsProfileSubmitData({ values: value }) },
+        {
+          onSuccess: () => {
+            formApi.reset(value);
+            toast.success("Настройки сохранены");
           },
-          goals: {
-            companiesPerWeek: toNumber({
-              value: values.companiesPerWeek,
-              fallback: 10,
-            }),
+          onError: () => {
+            toast.error("Не получилось сохранить настройки");
           },
-          followUp: {
-            firstDays: toNumber({ value: values.firstDays, fallback: 5 }),
-            secondDays: toNumber({ value: values.secondDays, fallback: 6 }),
-            reviveWeeks: toNumber({ value: values.reviveWeeks, fallback: 9 }),
-          },
-          defaultCountryCode: values.defaultCountryCode,
         },
-      },
-      {
-        onSuccess: () => {
-          toast.success("Настройки сохранены");
-        },
-      },
-    );
-  }, [updateSettings, values]);
+      );
+    },
+  });
 
-  return {
-    handleFieldChange,
-    handleSubmitClick,
-    isPending: updateSettings.isPending,
-    values,
-  };
+  const { onFormSubmit } = useFormHandlers({ form });
+
+  return { form, isPending: updateSettings.isPending, onFormSubmit };
 };

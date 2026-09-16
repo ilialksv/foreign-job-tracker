@@ -32,3 +32,12 @@ export const CONTACT_LANGUAGE_LABELS: Record<ContactLanguage, string> = {
   ru: "Русский",
   en: "English",
 };
+
+export const CONTACT_ROLE_ORDER: ContactRole[] = [
+  "engineer",
+  "hiring",
+  "recruiter",
+  "other",
+];
+
+export const CONTACT_LANGUAGE_ORDER: ContactLanguage[] = ["en", "ru"];

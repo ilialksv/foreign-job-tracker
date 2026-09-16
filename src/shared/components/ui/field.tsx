@@ -11,10 +11,10 @@ export type FieldProps = {
 
 export const Field = ({ label, hint, className, children }: FieldProps) => (
   <label className={cn("flex flex-col gap-1.5", className)}>
-    <span className="text-xs font-medium tracking-wide text-muted uppercase">
+    <span className="text-muted text-xs font-medium tracking-wide uppercase">
       {label}
     </span>
     {children}
-    {hint ? <span className="text-xs text-muted">{hint}</span> : null}
+    {hint ? <span className="text-muted text-xs">{hint}</span> : null}
   </label>
 );

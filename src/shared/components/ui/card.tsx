@@ -4,7 +4,7 @@ import { cn } from "@/shared/utils/cn";
 
 export const Card = ({ className, ...props }: ComponentProps<"div">) => (
   <div
-    className={cn("rounded-xl border border-line bg-surface", className)}
+    className={cn("border-line bg-surface rounded-xl border", className)}
     {...props}
   />
 );
@@ -12,7 +12,7 @@ export const Card = ({ className, ...props }: ComponentProps<"div">) => (
 export const CardHeader = ({ className, ...props }: ComponentProps<"div">) => (
   <div
     className={cn(
-      "flex flex-wrap items-start justify-between gap-3 border-b border-line px-4 py-3",
+      "border-line flex flex-wrap items-start justify-between gap-3 border-b px-4 py-3",
       className,
     )}
     {...props}
@@ -20,7 +20,7 @@ export const CardHeader = ({ className, ...props }: ComponentProps<"div">) => (
 );
 
 export const CardTitle = ({ className, ...props }: ComponentProps<"h2">) => (
-  <h2 className={cn("text-sm font-semibold text-ink", className)} {...props} />
+  <h2 className={cn("text-ink text-sm font-semibold", className)} {...props} />
 );
 
 export const CardContent = ({ className, ...props }: ComponentProps<"div">) => (

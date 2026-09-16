@@ -23,12 +23,12 @@ export const TodayStats = () => {
       {tiles.map((tile) => (
         <div
           key={tile.label}
-          className="flex flex-col gap-1 rounded-xl border border-line bg-surface px-4 py-3"
+          className="border-line bg-surface flex flex-col gap-1 rounded-xl border px-4 py-3"
         >
-          <span className="text-2xl font-semibold text-ink tabular-nums">
+          <span className="text-ink text-2xl font-semibold tabular-nums">
             {tile.value}
           </span>
-          <span className="text-xs text-muted">{tile.label}</span>
+          <span className="text-muted text-xs">{tile.label}</span>
         </div>
       ))}
     </div>

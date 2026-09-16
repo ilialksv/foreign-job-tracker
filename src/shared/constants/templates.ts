@@ -27,3 +27,24 @@ export const TEMPLATE_LANG_LABELS: Record<TemplateLang, string> = {
   ru: "RU",
   en: "EN",
 };
+
+export const TEMPLATE_LANG_ORDER: TemplateLang[] = ["en", "ru"];
+
+export const TEMPLATE_AUDIENCE_ORDER: TemplateAudience[] = [
+  "any",
+  "engineer",
+  "hiring",
+  "recruiter",
+];
+
+export const TEMPLATE_SCENARIO_ORDER: TemplateScenario[] = [
+  "connect_note",
+  "referral_request",
+  "no_vacancy",
+  "follow_up_1",
+  "follow_up_2",
+  "full_message",
+  "proof_of_work",
+  "thank_you",
+  "custom",
+];

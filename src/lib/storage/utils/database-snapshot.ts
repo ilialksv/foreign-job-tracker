@@ -108,9 +108,14 @@ export const restoreDatabaseSnapshot = async (params: {
       notesRepository.replaceAll({ items: data.notes }),
       tasksRepository.replaceAll({ items: data.tasks }),
       eventsRepository.replaceAll({ items: data.events }),
-      templatesRepository.replaceAll({ items: data.templates }),
       settingsRepository.replace({ data: data.settings }),
     ]);
+
+    // Пустой список шаблонов в файле импорта означает "шаблоны не переносим",
+    // а не "удалить свои": иначе встроенные шаблоны исчезли бы без возврата.
+    if (data.templates.length > 0) {
+      await templatesRepository.replaceAll({ items: data.templates });
+    }
 
     return;
   }
@@ -148,7 +153,6 @@ export const restoreDatabaseSnapshot = async (params: {
     templatesRepository.replaceAll({
       items: mergeCollections({ current: templates, incoming: data.templates }),
     }),
-    settingsRepository.replace({ data: data.settings }),
   ]);
 };
 

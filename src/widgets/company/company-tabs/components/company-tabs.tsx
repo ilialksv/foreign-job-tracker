@@ -9,13 +9,13 @@ const ACTIVE_PROPS = {
 };
 
 export const CompanyTabs = ({ companyId }: CompanyTabsProps) => (
-  <nav className="flex gap-1 overflow-x-auto border-b border-line">
+  <nav className="border-line flex gap-1 overflow-x-auto border-b">
     <Link
       to="/companies/$companyId"
       params={{ companyId }}
       activeOptions={{ exact: true }}
       activeProps={ACTIVE_PROPS}
-      className="border-b-2 border-transparent px-3 py-2 text-sm text-muted hover:text-ink"
+      className="text-muted hover:text-ink border-b-2 border-transparent px-3 py-2 text-sm"
     >
       Обзор
     </Link>
@@ -23,17 +23,9 @@ export const CompanyTabs = ({ companyId }: CompanyTabsProps) => (
       to="/companies/$companyId/plan"
       params={{ companyId }}
       activeProps={ACTIVE_PROPS}
-      className="border-b-2 border-transparent px-3 py-2 text-sm text-muted hover:text-ink"
+      className="text-muted hover:text-ink border-b-2 border-transparent px-3 py-2 text-sm"
     >
       Этапы
-    </Link>
-    <Link
-      to="/companies/$companyId/run"
-      params={{ companyId }}
-      activeProps={ACTIVE_PROPS}
-      className="border-b-2 border-transparent px-3 py-2 text-sm text-muted hover:text-ink"
-    >
-      Выполнение
     </Link>
   </nav>
 );
