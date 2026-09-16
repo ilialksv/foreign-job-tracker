@@ -8,117 +8,117 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./../../routes/__root";
-import { Route as IndexRouteImport } from "./../../routes/index";
-import { Route as RunRouteImport } from "./../../routes/run";
-import { Route as SettingsRouteImport } from "./../../routes/settings";
-import { Route as TemplatesRouteImport } from "./../../routes/templates";
-import { Route as CompaniesIndexRouteImport } from "./../../routes/companies/index";
-import { Route as CompaniesCompanyIdRouteRouteImport } from "./../../routes/companies/$companyId/route";
-import { Route as CompaniesCompanyIdIndexRouteImport } from "./../../routes/companies/$companyId/index";
-import { Route as CompaniesCompanyIdPlanRouteImport } from "./../../routes/companies/$companyId/plan";
-import { Route as CompaniesCompanyIdRunRouteImport } from "./../../routes/companies/$companyId/run";
-import { Route as CompaniesCompanyIdPlanIndexRouteImport } from "./../../routes/companies/$companyId/plan/index";
-import { Route as CompaniesCompanyIdPlanTaskIdRouteImport } from "./../../routes/companies/$companyId/plan/$taskId";
+import { Route as rootRouteImport } from "./../../routes/__root"
+import { Route as IndexRouteImport } from "./../../routes/index"
+import { Route as RunRouteImport } from "./../../routes/run"
+import { Route as SettingsRouteImport } from "./../../routes/settings"
+import { Route as TemplatesRouteImport } from "./../../routes/templates"
+import { Route as CompaniesIndexRouteImport } from "./../../routes/companies/index"
+import { Route as CompaniesCompanyIdRouteRouteImport } from "./../../routes/companies/$companyId/route"
+import { Route as CompaniesCompanyIdIndexRouteImport } from "./../../routes/companies/$companyId/index"
+import { Route as CompaniesCompanyIdPlanRouteImport } from "./../../routes/companies/$companyId/plan"
+import { Route as CompaniesCompanyIdRunRouteImport } from "./../../routes/companies/$companyId/run"
+import { Route as CompaniesCompanyIdPlanIndexRouteImport } from "./../../routes/companies/$companyId/plan/index"
+import { Route as CompaniesCompanyIdPlanTaskIdRouteImport } from "./../../routes/companies/$companyId/plan/$taskId"
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const RunRoute = RunRouteImport.update({
   id: "/run",
   path: "/run",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: "/settings",
   path: "/settings",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const TemplatesRoute = TemplatesRouteImport.update({
   id: "/templates",
   path: "/templates",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
   id: "/companies/",
   path: "/companies/",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const CompaniesCompanyIdRouteRoute = CompaniesCompanyIdRouteRouteImport.update({
   id: "/companies/$companyId",
   path: "/companies/$companyId",
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const CompaniesCompanyIdIndexRoute = CompaniesCompanyIdIndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => CompaniesCompanyIdRouteRoute,
-} as any);
+} as any)
 const CompaniesCompanyIdPlanRoute = CompaniesCompanyIdPlanRouteImport.update({
   id: "/plan",
   path: "/plan",
   getParentRoute: () => CompaniesCompanyIdRouteRoute,
-} as any);
+} as any)
 const CompaniesCompanyIdRunRoute = CompaniesCompanyIdRunRouteImport.update({
   id: "/run",
   path: "/run",
   getParentRoute: () => CompaniesCompanyIdRouteRoute,
-} as any);
+} as any)
 const CompaniesCompanyIdPlanIndexRoute =
   CompaniesCompanyIdPlanIndexRouteImport.update({
     id: "/",
     path: "/",
     getParentRoute: () => CompaniesCompanyIdPlanRoute,
-  } as any);
+  } as any)
 const CompaniesCompanyIdPlanTaskIdRoute =
   CompaniesCompanyIdPlanTaskIdRouteImport.update({
     id: "/$taskId",
     path: "/$taskId",
     getParentRoute: () => CompaniesCompanyIdPlanRoute,
-  } as any);
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/run": typeof RunRoute;
-  "/settings": typeof SettingsRoute;
-  "/templates": typeof TemplatesRoute;
-  "/companies/$companyId": typeof CompaniesCompanyIdRouteRouteWithChildren;
-  "/companies/": typeof CompaniesIndexRoute;
-  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanRouteWithChildren;
-  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute;
-  "/companies/$companyId/": typeof CompaniesCompanyIdIndexRoute;
-  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute;
-  "/companies/$companyId/plan/": typeof CompaniesCompanyIdPlanIndexRoute;
+  "/": typeof IndexRoute
+  "/run": typeof RunRoute
+  "/settings": typeof SettingsRoute
+  "/templates": typeof TemplatesRoute
+  "/companies/$companyId": typeof CompaniesCompanyIdRouteRouteWithChildren
+  "/companies/": typeof CompaniesIndexRoute
+  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanRouteWithChildren
+  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute
+  "/companies/$companyId/": typeof CompaniesCompanyIdIndexRoute
+  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute
+  "/companies/$companyId/plan/": typeof CompaniesCompanyIdPlanIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/run": typeof RunRoute;
-  "/settings": typeof SettingsRoute;
-  "/templates": typeof TemplatesRoute;
-  "/companies": typeof CompaniesIndexRoute;
-  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute;
-  "/companies/$companyId": typeof CompaniesCompanyIdIndexRoute;
-  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute;
-  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanIndexRoute;
+  "/": typeof IndexRoute
+  "/run": typeof RunRoute
+  "/settings": typeof SettingsRoute
+  "/templates": typeof TemplatesRoute
+  "/companies": typeof CompaniesIndexRoute
+  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute
+  "/companies/$companyId": typeof CompaniesCompanyIdIndexRoute
+  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute
+  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanIndexRoute
 }
 export interface FileRoutesById {
-  "__root__": typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/run": typeof RunRoute;
-  "/settings": typeof SettingsRoute;
-  "/templates": typeof TemplatesRoute;
-  "/companies/$companyId": typeof CompaniesCompanyIdRouteRouteWithChildren;
-  "/companies/": typeof CompaniesIndexRoute;
-  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanRouteWithChildren;
-  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute;
-  "/companies/$companyId/": typeof CompaniesCompanyIdIndexRoute;
-  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute;
-  "/companies/$companyId/plan/": typeof CompaniesCompanyIdPlanIndexRoute;
+  __root__: typeof rootRouteImport
+  "/": typeof IndexRoute
+  "/run": typeof RunRoute
+  "/settings": typeof SettingsRoute
+  "/templates": typeof TemplatesRoute
+  "/companies/$companyId": typeof CompaniesCompanyIdRouteRouteWithChildren
+  "/companies/": typeof CompaniesIndexRoute
+  "/companies/$companyId/plan": typeof CompaniesCompanyIdPlanRouteWithChildren
+  "/companies/$companyId/run": typeof CompaniesCompanyIdRunRoute
+  "/companies/$companyId/": typeof CompaniesCompanyIdIndexRoute
+  "/companies/$companyId/plan/$taskId": typeof CompaniesCompanyIdPlanTaskIdRoute
+  "/companies/$companyId/plan/": typeof CompaniesCompanyIdPlanIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
     | "/run"
@@ -130,8 +130,8 @@ export interface FileRouteTypes {
     | "/companies/$companyId/run"
     | "/companies/$companyId/"
     | "/companies/$companyId/plan/$taskId"
-    | "/companies/$companyId/plan/";
-  fileRoutesByTo: FileRoutesByTo;
+    | "/companies/$companyId/plan/"
+  fileRoutesByTo: FileRoutesByTo
   to:
     | "/"
     | "/run"
@@ -141,7 +141,7 @@ export interface FileRouteTypes {
     | "/companies/$companyId/run"
     | "/companies/$companyId"
     | "/companies/$companyId/plan/$taskId"
-    | "/companies/$companyId/plan";
+    | "/companies/$companyId/plan"
   id:
     | "__root__"
     | "/"
@@ -154,120 +154,120 @@ export interface FileRouteTypes {
     | "/companies/$companyId/run"
     | "/companies/$companyId/"
     | "/companies/$companyId/plan/$taskId"
-    | "/companies/$companyId/plan/";
-  fileRoutesById: FileRoutesById;
+    | "/companies/$companyId/plan/"
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  RunRoute: typeof RunRoute;
-  SettingsRoute: typeof SettingsRoute;
-  TemplatesRoute: typeof TemplatesRoute;
-  CompaniesCompanyIdRouteRoute: typeof CompaniesCompanyIdRouteRouteWithChildren;
-  CompaniesIndexRoute: typeof CompaniesIndexRoute;
+  IndexRoute: typeof IndexRoute
+  RunRoute: typeof RunRoute
+  SettingsRoute: typeof SettingsRoute
+  TemplatesRoute: typeof TemplatesRoute
+  CompaniesCompanyIdRouteRoute: typeof CompaniesCompanyIdRouteRouteWithChildren
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
     "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/run": {
-      id: "/run";
-      path: "/run";
-      fullPath: "/run";
-      preLoaderRoute: typeof RunRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/run"
+      path: "/run"
+      fullPath: "/run"
+      preLoaderRoute: typeof RunRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/settings": {
-      id: "/settings";
-      path: "/settings";
-      fullPath: "/settings";
-      preLoaderRoute: typeof SettingsRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/settings"
+      path: "/settings"
+      fullPath: "/settings"
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/templates": {
-      id: "/templates";
-      path: "/templates";
-      fullPath: "/templates";
-      preLoaderRoute: typeof TemplatesRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/templates"
+      path: "/templates"
+      fullPath: "/templates"
+      preLoaderRoute: typeof TemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/companies/": {
-      id: "/companies/";
-      path: "/companies";
-      fullPath: "/companies/";
-      preLoaderRoute: typeof CompaniesIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/companies/"
+      path: "/companies"
+      fullPath: "/companies/"
+      preLoaderRoute: typeof CompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/companies/$companyId": {
-      id: "/companies/$companyId";
-      path: "/companies/$companyId";
-      fullPath: "/companies/$companyId";
-      preLoaderRoute: typeof CompaniesCompanyIdRouteRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: "/companies/$companyId"
+      path: "/companies/$companyId"
+      fullPath: "/companies/$companyId"
+      preLoaderRoute: typeof CompaniesCompanyIdRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     "/companies/$companyId/": {
-      id: "/companies/$companyId/";
-      path: "/";
-      fullPath: "/companies/$companyId/";
-      preLoaderRoute: typeof CompaniesCompanyIdIndexRouteImport;
-      parentRoute: typeof CompaniesCompanyIdRouteRoute;
-    };
+      id: "/companies/$companyId/"
+      path: "/"
+      fullPath: "/companies/$companyId/"
+      preLoaderRoute: typeof CompaniesCompanyIdIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
     "/companies/$companyId/plan": {
-      id: "/companies/$companyId/plan";
-      path: "/plan";
-      fullPath: "/companies/$companyId/plan";
-      preLoaderRoute: typeof CompaniesCompanyIdPlanRouteImport;
-      parentRoute: typeof CompaniesCompanyIdRouteRoute;
-    };
+      id: "/companies/$companyId/plan"
+      path: "/plan"
+      fullPath: "/companies/$companyId/plan"
+      preLoaderRoute: typeof CompaniesCompanyIdPlanRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
     "/companies/$companyId/run": {
-      id: "/companies/$companyId/run";
-      path: "/run";
-      fullPath: "/companies/$companyId/run";
-      preLoaderRoute: typeof CompaniesCompanyIdRunRouteImport;
-      parentRoute: typeof CompaniesCompanyIdRouteRoute;
-    };
+      id: "/companies/$companyId/run"
+      path: "/run"
+      fullPath: "/companies/$companyId/run"
+      preLoaderRoute: typeof CompaniesCompanyIdRunRouteImport
+      parentRoute: typeof CompaniesCompanyIdRouteRoute
+    }
     "/companies/$companyId/plan/": {
-      id: "/companies/$companyId/plan/";
-      path: "/";
-      fullPath: "/companies/$companyId/plan/";
-      preLoaderRoute: typeof CompaniesCompanyIdPlanIndexRouteImport;
-      parentRoute: typeof CompaniesCompanyIdPlanRoute;
-    };
+      id: "/companies/$companyId/plan/"
+      path: "/"
+      fullPath: "/companies/$companyId/plan/"
+      preLoaderRoute: typeof CompaniesCompanyIdPlanIndexRouteImport
+      parentRoute: typeof CompaniesCompanyIdPlanRoute
+    }
     "/companies/$companyId/plan/$taskId": {
-      id: "/companies/$companyId/plan/$taskId";
-      path: "/$taskId";
-      fullPath: "/companies/$companyId/plan/$taskId";
-      preLoaderRoute: typeof CompaniesCompanyIdPlanTaskIdRouteImport;
-      parentRoute: typeof CompaniesCompanyIdPlanRoute;
-    };
+      id: "/companies/$companyId/plan/$taskId"
+      path: "/$taskId"
+      fullPath: "/companies/$companyId/plan/$taskId"
+      preLoaderRoute: typeof CompaniesCompanyIdPlanTaskIdRouteImport
+      parentRoute: typeof CompaniesCompanyIdPlanRoute
+    }
   }
 }
 
 interface CompaniesCompanyIdPlanRouteChildren {
-  CompaniesCompanyIdPlanTaskIdRoute: typeof CompaniesCompanyIdPlanTaskIdRoute;
-  CompaniesCompanyIdPlanIndexRoute: typeof CompaniesCompanyIdPlanIndexRoute;
+  CompaniesCompanyIdPlanTaskIdRoute: typeof CompaniesCompanyIdPlanTaskIdRoute
+  CompaniesCompanyIdPlanIndexRoute: typeof CompaniesCompanyIdPlanIndexRoute
 }
 
 const CompaniesCompanyIdPlanRouteChildren: CompaniesCompanyIdPlanRouteChildren =
   {
     CompaniesCompanyIdPlanTaskIdRoute: CompaniesCompanyIdPlanTaskIdRoute,
     CompaniesCompanyIdPlanIndexRoute: CompaniesCompanyIdPlanIndexRoute,
-  };
+  }
 
 const CompaniesCompanyIdPlanRouteWithChildren =
   CompaniesCompanyIdPlanRoute._addFileChildren(
     CompaniesCompanyIdPlanRouteChildren,
-  );
+  )
 
 interface CompaniesCompanyIdRouteRouteChildren {
-  CompaniesCompanyIdPlanRoute: typeof CompaniesCompanyIdPlanRouteWithChildren;
-  CompaniesCompanyIdRunRoute: typeof CompaniesCompanyIdRunRoute;
-  CompaniesCompanyIdIndexRoute: typeof CompaniesCompanyIdIndexRoute;
+  CompaniesCompanyIdPlanRoute: typeof CompaniesCompanyIdPlanRouteWithChildren
+  CompaniesCompanyIdRunRoute: typeof CompaniesCompanyIdRunRoute
+  CompaniesCompanyIdIndexRoute: typeof CompaniesCompanyIdIndexRoute
 }
 
 const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren =
@@ -275,12 +275,12 @@ const CompaniesCompanyIdRouteRouteChildren: CompaniesCompanyIdRouteRouteChildren
     CompaniesCompanyIdPlanRoute: CompaniesCompanyIdPlanRouteWithChildren,
     CompaniesCompanyIdRunRoute: CompaniesCompanyIdRunRoute,
     CompaniesCompanyIdIndexRoute: CompaniesCompanyIdIndexRoute,
-  };
+  }
 
 const CompaniesCompanyIdRouteRouteWithChildren =
   CompaniesCompanyIdRouteRoute._addFileChildren(
     CompaniesCompanyIdRouteRouteChildren,
-  );
+  )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -289,7 +289,7 @@ const rootRouteChildren: RootRouteChildren = {
   TemplatesRoute: TemplatesRoute,
   CompaniesCompanyIdRouteRoute: CompaniesCompanyIdRouteRouteWithChildren,
   CompaniesIndexRoute: CompaniesIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

@@ -1,13 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-import { CompanyPlanPage } from "@/entrypoints/company-plan/component";
-
-const CompanyPlanRoute = () => {
-  const { companyId } = Route.useParams();
-
-  return <CompanyPlanPage companyId={companyId} />;
-};
+const CompanyPlanLayoutRoute = () => <Outlet />;
 
 export const Route = createFileRoute("/companies/$companyId/plan")({
-  component: CompanyPlanRoute,
+  component: CompanyPlanLayoutRoute,
 });
